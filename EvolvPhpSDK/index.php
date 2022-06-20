@@ -9,16 +9,10 @@ require_once  __DIR__ . '/App/EvolvClient.php';
 
 require  'vendor/autoload.php';
 
-
-//options: Partial<{analytics: boolean, bufferEvents?: boolean, environment: string, endpoint: string, auth?: any, clientName?: string, autoConfirm: boolean, context?: any, store?: any, version: number, hooks: RequestHooks}>
-$json = '{"analytics": false, "environment": "cf95dc8c59", "endpoint": "https://participants-stg.evolv.ai/v1", "auth": [{"id" : "12w33", "secret" : "23eeee"}], "clientName": "asset-manager", "version": ""}';
-//$array=json_decode($json);
+$json = '{"analytics": "false", "bufferEvents": "false", "environment": "cf95dc8c59", "endpoint": "https://participants-stg.evolv.ai/v1", "auth": [{"id" : "12w33", "secret" : "23eeee"}],"uid": "54120622_1654686958544", "clientName": "asset-manager", "version": ""}';
 
 $client = new EvolvClient($json);
+$client->evaluateAllocationPredicates();
 
-$store  = new Store($json);
 
-$cntx = new Context();
 
-echo $cntx->initialize(6, 6,  $json, $json);
-echo $cntx->ensureInitialized();

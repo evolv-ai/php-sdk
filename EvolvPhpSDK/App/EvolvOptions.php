@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EvolvOptions;
 
-class  Options{
+class  Options
+{
 
     public static function Parse($obj)
     {
@@ -44,5 +47,9 @@ class  Options{
         return $obj;
     }
 
+    public function base_64($string)
+    {
+        return base64_encode($string);
+    }
 
 }
