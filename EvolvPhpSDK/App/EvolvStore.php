@@ -9,16 +9,6 @@ require_once __DIR__ . '/EvolvContext.php';
 
 class Store
 {
-    private const GENOME_REQUEST_SENT = "genome.request.sent";
-    private const CONFIG_REQUEST_SENT = "config.request.sent";
-    private const GENOME_REQUEST_RECEIVED = "genome.request.received";
-    private const CONFIG_REQUEST_RECEIVED = "config.request.received";
-    private const REQUEST_FAILED = "request.failed";
-    private const GENOME_UPDATED = "genome.updated";
-    private const CONFIG_UPDATED = "config.updated";
-    private const EFFECTIVE_GENOME_UPDATED = "effective.genome.updated";
-    private const STORE_DESTROYED = "store.destroyed";
-
 
     public $version;
     public $prefix;
@@ -35,21 +25,13 @@ class Store
     public $waitingToPullImmediate = true;
     public $genomes = [];
     public $effectiveGenome = [];
-    public $allocation = " ";
-    public $config = " ";
-    public $activeEids = [];
-    public $activeKeys = [];
-    public $previousKeys = [];
-    public $activeVariants = [];
-    public $previousVariants = [];
-    public $predicate = [];
-    public $genomeFailed = false;
-    public $configFailed = false;
+    public $allocations = null;
+    public $config = null;
     public $current = [];
     public $previos = [];
-
-
-    //public $initialized = false;
+    public $prev = null;
+    public $web = "web";
+    public $point = "_is_entry_point";
 
 
     public function pull($options)
@@ -62,23 +44,26 @@ class Store
         );
 
         $keyId = $options['auth'][0]['id'];
+
         $key = $options['auth'][0]['secret'];
+
         $allocation = $options['endpoint'] . '/' . $options['environment'] . '/' . $options['uid'] . '/allocations';
+
         $config = $options['endpoint'] . '/' . $options['environment'] . '/' . $options['uid'] . '/configuration.json';
 
         $opts = stream_context_create($opts);
 
-        $this->alocation = file_get_contents($allocation, false, $opts);
+        $arr_location = file_get_contents($allocation, false, $opts);
 
-        $this->config = file_get_contents($config, false, $opts);
+        $arr_config = file_get_contents($config, false, $opts);
 
-        if (!$this->config || !$this->alocation) {
+        if (!$arr_config || !$arr_location) {
 
             exit("Not active path or configuration!");
 
         }
 
-        $this->config = json_decode($this->config, true);
+        $arr_config = json_decode($arr_config, true);
 
         $this->genomeKeyStates = [
             'needed' => [],
@@ -92,14 +77,13 @@ class Store
             'experiments' => [],
         ];
 
-        array_push($this->genomeKeyStates['experiments'], $this->config);
+        array_push($this->genomeKeyStates['experiments'], $arr_config);
 
-        foreach ($this->config['_experiments'] as $key => $exp) {
+        foreach ($arr_config['_experiments'] as $key => $v) {
 
-            array_push($this->configKeyStates['experiments'], $exp);
+            array_push($this->configKeyStates['experiments'], $v);
 
         }
-
 
     }
 
@@ -111,81 +95,85 @@ class Store
     }
 
 
-    public function getKeys($array, $point)
+    public function getActiveKeyses($array)
     {
+        $web = "web";
 
-        $i = 0;
+        foreach ($array as $key => $value) {
 
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
-                $web = key($value);
-                $index = array_keys($value[$web]);
-            }
-        }
+            if (is_array($value)) {
 
-        if (is_array($array)) {
+                $value = array_reverse($value);
 
-            foreach ($array as $key => $value) {
+                $this->getActiveKeyses($value);
 
-                foreach ($array[$i][$web] as $key => $value) {
+                if (is_numeric($key)) continue;
 
-                    if (is_array($value) && array_key_exists($point, $value) && $value[$point] == 1) {
+                if (!preg_match('/[_]/i', $key) && !empty($key) && $key != 'rules') {
 
-                        $this->current[] = $web . "." . $key;
+                    if ($key == $this->web) {
+                        continue;
+                    } else if (array_key_exists($this->point, $value) && $value[$this->point] == 1) {
 
-                        $this->predicate[$key] = $value['_predicate'];
+                        $this->prev = $key;
 
-                    } elseif (is_array($value) && array_key_exists($point, $value) && $value[$point] != 1) {
+                        $this->previos[] = $this->web . '.' . $this->prev;
 
-                        $this->previous[] = $web . "." . $key;
+                        $this->current[] = $this->web . '.' . $this->prev;
+
+                    } else {
+                        $this->current[][] = $key;
+
+                        $this->previos[][] = $key;
                     }
 
-                    if (is_array($value)) {
-
-                        foreach ($value as $keys => $exp) {
-
-                            if (is_array($exp)) {
-
-                                $this->predicate[$keys] = $value['_predicate'];
-
-                                if (is_array($exp) && array_key_exists($point, $exp) && $exp[$point] === 1) {
-
-                                    $this->current[] = $web . "." . $key . "." . $keys;
-
-                                } else {
-
-                                    if (!preg_match('/[_]/i', $keys)) {
-
-                                        $this->previous[] = $web . "." . $key . "." . $keys;
-
-                                    };
-                                }
-                            }
-                        }
-                    }
                 }
-                $i++;
             }
+
         }
+
     }
 
+    public function setActiveKeys($array)
+    {
+        foreach ($this->current as $k => $val) {
+
+            if (!is_array($val)) {
+
+                $arr[] = $y = $val;
+
+            } else {
+
+                foreach ($val as $k => $t) {
+
+                    $arr[] = $y . "." . $t;
+                }
+            }
+        }
+        $this->print_r($arr);
+    }
 
     public function getActiveKeys()
     {
-        $configKey = $this->configKeyStates['experiments'];
+        $experiments = $this->configKeyStates['experiments'];
 
-        $p = 0;
-        $this->getKeys($this->configKeyStates['experiments'], $point = "_is_entry_point");
+        $experiments = array_reverse($experiments);
 
+        $this->getActiveKeyses($experiments);
 
-        echo "<strong>Current:</strong><br>" . implode('<br>', $this->current);
-        echo "<br>";
-        echo "<strong>Previous:</strong><br>" . implode('<br>', $this->previous);
+        $this->current = array_reverse($this->current);
+
+        $this->previos = array_reverse($this->previos);
+
+        $this->setActiveKeys($this->current);
+
+        $this->setActiveKeys($this->previos);
+
     }
 
     public function evaluateAllocationPredicates()
     {
-
+        $this->print_r($this->configKeyStates);
     }
 
     public function initialized($context, $options)
@@ -193,11 +181,13 @@ class Store
 
         if ($this->initialized) {
 
-            ('Evolv: The store has already been initialized.');
+
+           echo 'Evolv: The store has already been initialized.';
 
         }
-        $context = $this->context;
 
+
+        $context = $this->context;
 
     }
 

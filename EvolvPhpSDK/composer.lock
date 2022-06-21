@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87c279a5a4d26d764c0e20d69cf0edb6",
+    "content-hash": "d78f81be4599447fd4e810ef747dd8a3",
     "packages": [
         {
             "name": "cilex/cilex",

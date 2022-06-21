@@ -12,7 +12,7 @@ use  App\EvolvOptions\Options;
 require 'vendor/autoload.php';
 require_once __DIR__ . '/EvolvStore.php';
 require_once __DIR__ . '/EvolvContext.php';
-//require_once __DIR__ . '/EvolvOptions.php';
+
 
 ini_set('display_errors', 'on');
 
@@ -53,12 +53,45 @@ class EvolvClient extends Store
         return json_encode(($this->beaconOptions));
     }
 
+    /**
+     * Initializes the client with required context information.
+     *
+     * @param {String} uid A globally unique identifier for the current participant.
+     * @param {String} sid A globally unique session identifier for the current participant.
+     * @param {Object} remoteContext A map of data used for evaluating context predicates and analytics.
+     * @param {Object} localContext A map of data used only for evaluating context predicates.
+     */
+
     public function initialize($options, $uid, $remoteContext, $localContext)
     {
+        $options = Options::buildOptions($options);
+
+        $options = Options::Parse($options);
+
         $this->pull($options);
 
-        $this->getActiveKeys();
+        if ($this->initialized == true) {
+
+            echo('Evolv: Client is already initialized');
+
+        }
+
+        if (!$uid) {
+
+            echo 'Evolv: "uid" must be specified';
+
+        }
+
+        $this->context = new Context();
+
+        $this->context->initialize($uid, $remoteContext, $localContext);
+
+        $store =  new Store();
+
+        $store->initialized($this->context, $options);
+
     }
+
 
     public function __construct($options)
     {
@@ -66,20 +99,23 @@ class EvolvClient extends Store
 
         $options = Options::Parse($options);
 
-        $context = new Context();
+        $this->context = new Context();
 
-        $store =  new Store();
+        $store = new Store();
 
-        $context->initialize($options, $options['uid'], $this->remoteContext, $this->localContext);
+        $this->context->initialize($options, $options['uid'], $this->remoteContext, $this->localContext);
+        $this->context->set("web","http://fgh",true);
+        $this->context->set("age","234",true);
+        $this->context->set("age","234",true);
 
-        $store->initialized($context, $options);
+        $store->initialized($this->context, $options);
 
         $store->pull($options);
 
-        $store->getActiveKeys();
     }
 
 }
+
 
 
 

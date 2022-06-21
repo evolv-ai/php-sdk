@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\EvolvOptions;
 
-class  Options
-{
+
+class  Options{
 
     public static function Parse($obj)
     {
@@ -20,7 +18,7 @@ class  Options
 
         $obj = json_decode($obj);
 
-        if (!array_key_exists('environment', $obj) || empty($obj->environment)):
+        if (!property_exists($obj,'environment') || empty($obj->environment)):
 
             echo $error = '"environment" must be specified';
 
@@ -28,7 +26,7 @@ class  Options
 
         endif;
 
-        if (!array_key_exists('autoConfirm', $obj)) {
+        if (!property_exists($obj,'autoConfirm')) {
 
             $obj->autoConfirm = true;
 
@@ -38,7 +36,7 @@ class  Options
 
         $obj->endpoint = !empty($obj->endpoint) ? $obj->endpoint : 'https://participants.evolv.ai/' . 'v' . $obj->version;
 
-        $obj->analytics = array_key_exists('analytics', $obj) && empty(array_key_exists('analytics', $obj)) ? $obj->analytics : $obj->version = 1;
+        $obj->analytics = property_exists($obj,'analytics') && empty(property_exists($obj,'analytics' )) ? $obj->analytics : $obj->version = 1;
 
         $obj = json_encode($obj, JSON_UNESCAPED_SLASHES);
 
@@ -47,9 +45,5 @@ class  Options
         return $obj;
     }
 
-    public function base_64($string)
-    {
-        return base64_encode($string);
-    }
 
 }

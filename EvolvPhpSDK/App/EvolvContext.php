@@ -7,17 +7,10 @@ namespace App\EvolvContext;
 use  App\EvolvOptions\Options;
 
 require_once __DIR__ . '/EvolvOptions.php';
+require_once __DIR__ . '/EvolvClient.php';
 
 class Context
 {
-
-    private const CONTEXT_CHANGED = 'context.changed';
-    private const CONTEXT_INITIALIZED = 'context.initialized';
-    private const CONTEXT_VALUE_REMOVED = 'context.value.removed';
-    private const CONTEXT_VALUE_ADDED = 'context.value.added';
-    private const CONTEXT_VALUE_CHANGED = 'context.value.changed';
-    private const CONTEXT_DESTROYED = 'context.destroyed';
-    private const DEFAULT_QUEUE_LIMIT = 50;
 
     public $uid;
     public $sid;
@@ -54,23 +47,54 @@ class Context
 
     }
 
-    function ensureInitialized()
+    public function ensureInitialized()
     {
-        if ($this->initialized) {
-
-            $error = 'Evolv: The evolv context is not initialized';
-
-           return $error;
+        if (!($this->initialized)) {
+            echo 'Evolv: The evolv context is not initialized';
         }
+    }
+
+    public function setKeyToValue($key, $val, $loc)
+    {
+        $mass = [];
+        $this->array = array_push( $mass, $key);
+        for ($i = 0; $i < $this->array; $i++) {
+            $i . ":"  ;
+        }
+
+
+    }
+
+    /**
+     * Sets a value in the current context.
+     *
+     * Note: This will cause the effective genome to be recomputed.
+     *
+     * @param key {String} The key to associate the value to.
+     * @param value {*} The value to associate with the key.
+     * @param local {Boolean} If true, the value will only be added to the localContext.
+     */
+
+    public function set($key, $value, $local)
+    {
+        echo $key;
+        echo $value;
+        $this->ensureInitialized();
+
+        $context = $local ? $this->localContext : $this->remoteContext;
+
+        $cnt = $this->setKeyToValue($key, $value, $context);
+
+        print_r($cnt);
     }
 
 
     public function initialize($uid, $remoteContext, $localContext)
     {
+
         if ($this->initialized) {
 
             echo $error = 'Evolv: The context is already initialized';
-            exit();
 
         }
 
