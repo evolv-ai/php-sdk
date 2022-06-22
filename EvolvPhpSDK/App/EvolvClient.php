@@ -95,6 +95,10 @@ class EvolvClient extends Store
 
         $result = $this->context->set($key, $value, $local);
 
+        $this->remoteContext = Context::$remoteContext;
+
+        $this->localContext = Context::$localContext;
+
         return $result;
 
     }
@@ -111,11 +115,18 @@ class EvolvClient extends Store
 
         $store = new Store();
 
-         $this->context->initialize($options, $options['uid'], $this->remoteContext, $this->localContext);
+        Context::initialize($options['uid'], $this->remoteContext, $this->localContext);
+
+        $this->remoteContext = Context::$remoteContext;
+
+        $this->print_r($this->remoteContext);
+
+        $this->localContext = Context::$localContext;
 
         $store->initialized($this->context, $options);
 
         $store->pull($options);
+
 
     }
 

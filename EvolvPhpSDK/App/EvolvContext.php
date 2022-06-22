@@ -14,12 +14,13 @@ class Context
 
     public $uid;
     public $sid;
-    public $remoteContext;
-    public $localContext;
+    public static $remoteContext;
+    public static $localContext;
     public $initialized = false;
     public $current = [];
     public $set = [];
     public $value;
+
 
     /**
      * A unique identifier for the participant.
@@ -46,7 +47,7 @@ class Context
     public function localContext($localContext)
     {
 
-        $this->remoteContext = Options::Parse($localContext);
+        self::$remoteContext = Options::Parse(self::$localContext);
 
     }
 
@@ -108,7 +109,7 @@ class Context
             }
 
         }
-       // print_r($this->current);
+        // print_r($this->current);
         return $this->current;
     }
 
@@ -127,13 +128,38 @@ class Context
         $key;
         $value;
 
-        $context = $local ? $this->localContext : $this->remoteContext;
+        $context = $local ? self::$localContext : self::$remoteContext;
 
         $before = $this->getValueForKey($key, $local);
 
         $context = $this->setKeyToValue($key, $value, $local);
 
-        return $context;
+        if ($local == true) {
+
+            self::$localContext = $this->setKeyToValue($key, $value, $local);
+
+        } else {
+
+            self::$remoteContext = $this->setKeyToValue($key, $value, $local);
+
+        }
+
+        self::$remoteContext  = !empty( self::$remoteContext ) ?  self::$remoteContext : "";
+
+        self::$localContext  = !empty( self::$localContext ) ?  self::$remoteContext : "" ;
+
+        echo "Local" . "<br>";
+
+        print_r(self::$localContext);
+
+        echo "<br>" .  "Remote" . "<br>";
+
+        print_r(self::$remoteContext);
+
+        echo "<br>";
+
+        return self::$remoteContext;
+
     }
 
 
@@ -147,8 +173,8 @@ class Context
 
         }
 
-        $context->remoteContext = $context->remoteContext ? Options::Parse($context->remoteContext) : [];
-        $context->localContext = $context->remoteContext ? Options::Parse($context->localContext) : [];
+        self::$remoteContext = self::$remoteContext ? Options::Parse(self::$remoteContext) : [];
+        self::$localContext = self::$remoteContext ? Options::Parse(self::$localContext) : [];
         $context->initialized = true;
     }
 
