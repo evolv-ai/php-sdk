@@ -150,7 +150,7 @@ class Store
                 }
             }
         }
-        $this->print_r($arr);
+        return $arr;
     }
 
     public function getActiveKeys()
@@ -165,9 +165,13 @@ class Store
 
         $this->previos = array_reverse($this->previos);
 
-        $this->setActiveKeys($this->current);
+        $current = $this->setActiveKeys($this->current);
 
-        $this->setActiveKeys($this->previos);
+        $previos = $this->setActiveKeys($this->previos);
+
+        $keys = [["current"],$current , ["previos"],$previos];
+
+        return  $keys;
 
     }
 
@@ -185,7 +189,6 @@ class Store
            echo 'Evolv: The store has already been initialized.';
 
         }
-
 
         $context = $this->context;
 

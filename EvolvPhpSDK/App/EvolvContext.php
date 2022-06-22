@@ -17,6 +17,9 @@ class Context
     public $remoteContext;
     public $localContext;
     public $initialized = false;
+    public $current = [];
+    public $set = [];
+    public $value;
 
     /**
      * A unique identifier for the participant.
@@ -49,20 +52,64 @@ class Context
 
     public function ensureInitialized()
     {
-        if (!($this->initialized)) {
+
+        if ($this->initialized == false) {
             echo 'Evolv: The evolv context is not initialized';
+        } else if ($this->initialized == true) {
+            echo "Evolv: The evolv context is initialized";
         }
     }
 
-    public function setKeyToValue($key, $val, $loc)
+    public function getValueForKey($key, $local)
     {
-        $mass = [];
-        $this->array = array_push( $mass, $key);
-        for ($i = 0; $i < $this->array; $i++) {
-            $i . ":"  ;
+
+        $this->value;
+
+        $keys = explode(".", $key);
+
+        for ($i = 0; $i < count($keys); $i++) {
+
+            $k = $keys[$i];
+
+            if ($i === (count($keys) - 1)) {
+
+                $this->current[$k] = $this->value;
+
+                break;
+
+            } else {
+                $this->current[$k] = null;
+            }
+
         }
 
+        return $this->value;
+    }
 
+    public function setKeyToValue($key, $value, $local)
+    {
+        $key;
+        $value;
+        //   $this->ensureInitialized();
+        $keys = explode(".", $key);
+
+        for ($i = 0; $i < count($keys); $i++) {
+
+            $k = $keys[$i];
+
+            if ($i === (count($keys) - 1)) {
+
+                $this->current[$k] = $value;
+
+                break;
+
+            } else {
+                $this->current[$k] = ' ';
+            }
+
+        }
+       // print_r($this->current);
+        return $this->current;
     }
 
     /**
@@ -77,30 +124,32 @@ class Context
 
     public function set($key, $value, $local)
     {
-        echo $key;
-        echo $value;
-        $this->ensureInitialized();
+        $key;
+        $value;
 
         $context = $local ? $this->localContext : $this->remoteContext;
 
-        $cnt = $this->setKeyToValue($key, $value, $context);
+        $before = $this->getValueForKey($key, $local);
 
-        print_r($cnt);
+        $context = $this->setKeyToValue($key, $value, $local);
+
+        return $context;
     }
 
 
-    public function initialize($uid, $remoteContext, $localContext)
+    public static function initialize($uid, $remoteContext, $localContext)
     {
+        $context = new Context();
 
-        if ($this->initialized) {
+        if ($context->initialized) {
 
             echo $error = 'Evolv: The context is already initialized';
 
         }
 
-        $this->remoteContext = $this->remoteContext ? Options::Parse($this->remoteContext) : [];
-        $this->localContext = $this->remoteContext ? Options::Parse($this->localContext) : [];
-        $this->initialized = true;
+        $context->remoteContext = $context->remoteContext ? Options::Parse($context->remoteContext) : [];
+        $context->localContext = $context->remoteContext ? Options::Parse($context->localContext) : [];
+        $context->initialized = true;
     }
 
 

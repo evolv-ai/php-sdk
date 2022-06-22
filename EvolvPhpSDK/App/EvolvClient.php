@@ -82,15 +82,23 @@ class EvolvClient extends Store
 
         }
 
-        $this->context = new Context();
+        Context::initialize($uid, $remoteContext, $localContext);
 
-        $this->context->initialize($uid, $remoteContext, $localContext);
-
-        $store =  new Store();
+        $store = new Store();
 
         $store->initialized($this->context, $options);
 
     }
+
+    public function set($key, $value, $local)
+    {
+
+        $result = $this->context->set($key, $value, $local);
+
+        return $result;
+
+    }
+
 
 
     public function __construct($options)
@@ -103,15 +111,19 @@ class EvolvClient extends Store
 
         $store = new Store();
 
-        $this->context->initialize($options, $options['uid'], $this->remoteContext, $this->localContext);
-        $this->context->set("web","http://fgh",true);
-        $this->context->set("age","234",true);
-        $this->context->set("age","234",true);
+         $this->context->initialize($options, $options['uid'], $this->remoteContext, $this->localContext);
 
         $store->initialized($this->context, $options);
 
         $store->pull($options);
 
+    }
+
+    public function print_r($arr)
+    {
+        echo "<pre>";
+        print_r($arr);
+        echo "</pre>";
     }
 
 }
