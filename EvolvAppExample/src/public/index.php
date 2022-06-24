@@ -9,6 +9,13 @@
 
 define('LARAVEL_START', microtime(true));
 
+require __DIR__.'/EvolvPhpSDK/App/EvolvClient.php';
+
+use  App\EvolvClient\EvolvClient;
+
+
+require __DIR__.'/../vendor/autoload.php';
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -58,3 +65,17 @@ $response = $kernel->handle(
 $response->send();
 
 $kernel->terminate($request, $response);
+
+
+
+
+$json = '{"analytics": "false", "bufferEvents": "false", "environment": "cf95dc8c59", "endpoint": "https://participants-stg.evolv.ai/v1", "auth": [{"id" : "12w33", "secret" : "23eeee"}],"uid": "54120622_1654686958544", "clientName": "asset-manager", "version": ""}';
+
+$client = new EvolvClient($json);
+
+$client->getActiveKey();
+
+
+$client->initialize('54120622_1654686958544');
+
+$client->initialize($json,'54120622_1654686958544',$remoteContext, $localContext);

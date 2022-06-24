@@ -2,10 +2,14 @@
 
 namespace App\EvolvStore;
 
+use App\EvolvContext\Context;
 use  App\EvolvOptions\Options;
+use  App\EvolvPredicate\Predicate;
+use Faker\Provider\Person;
 
 require_once __DIR__ . '/EvolvOptions.php';
 require_once __DIR__ . '/EvolvContext.php';
+require_once __DIR__ . '/EvolvPredicate.php';
 
 class Store
 {
@@ -29,6 +33,7 @@ class Store
     public $config = null;
     public $current = [];
     public $previos = [];
+    public $predicate = [];
     public $prev = null;
     public $web = "web";
     public $point = "_is_entry_point";
@@ -57,7 +62,7 @@ class Store
 
         $arr_config = file_get_contents($config, false, $opts);
 
-        if (!$arr_config || !$arr_location) {
+        if (!$arr_config && !$arr_location) {
 
             exit("Not active path or configuration!");
 
@@ -97,7 +102,7 @@ class Store
 
     public function getActiveKeyses($array)
     {
-        $web = "web";
+        $web = "";
 
         foreach ($array as $key => $value) {
 
@@ -117,9 +122,9 @@ class Store
 
                         $this->prev = $key;
 
-                        $this->previos[] = $this->web . '.' . $this->prev;
+                        $this->previos[] = $this->prev;
 
-                        $this->current[] = $this->web . '.' . $this->prev;
+                        $this->current[] = $this->prev;
 
                     } else {
                         $this->current[][] = $key;
@@ -169,15 +174,45 @@ class Store
 
         $previos = $this->setActiveKeys($this->previos);
 
-        $keys = [["current"],$current , ["previos"],$previos];
+        $keys = [["current"], $current, ["previos"], $previos];
 
-        return  $keys;
+        return $keys;
 
     }
 
+    public function getPredicate($config)
+    {
+        foreach ($config as $key => $value) {
+
+            if (is_array($value)) {
+
+                $key = (!preg_match('/[_]/i', $key) && !empty($key) && $key != 'rules') ? $key : '';
+
+                if (isset($value['_predicate'])) {
+
+                    $this->predicate[$key] = $value['_predicate'];
+
+                }
+
+                $this->getPredicate($value);
+
+            }
+        }
+        return $this->predicate;
+
+    }
+
+    public function evaluatePredicates($config)
+    {
+        $predicates = $this->getPredicate($config);
+
+      //  $this->print_r($predicates);
+    }
+
+
     public function evaluateAllocationPredicates()
     {
-        $this->print_r($this->configKeyStates);
+
     }
 
     public function initialized($context, $options)
@@ -186,7 +221,7 @@ class Store
         if ($this->initialized) {
 
 
-           echo 'Evolv: The store has already been initialized.';
+            echo 'Evolv: The store has already been initialized.';
 
         }
 

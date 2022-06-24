@@ -7,20 +7,22 @@ namespace App\EvolvContext;
 use  App\EvolvOptions\Options;
 
 require_once __DIR__ . '/EvolvOptions.php';
-require_once __DIR__ . '/EvolvClient.php';
+
 
 class Context
 {
 
     public $uid;
     public $sid;
+    public $initialized = false;
+    public static $current = [];
+    public static $set = [];
+    public static $value;
+    public static $local;
+    public static $context;
     public static $remoteContext;
     public static $localContext;
-    public $initialized = false;
-    public $current = [];
-    public $set = [];
-    public $value;
-
+    public static $result = [];
 
     /**
      * A unique identifier for the participant.
@@ -61,10 +63,11 @@ class Context
         }
     }
 
-    public function getValueForKey($key, $local)
+    public static function getValueForKey($key, $local)
     {
 
-        $this->value;
+        self::$value;
+        $local;
 
         $keys = explode(".", $key);
 
@@ -74,44 +77,62 @@ class Context
 
             if ($i === (count($keys) - 1)) {
 
-                $this->current[$k] = $this->value;
+                self::$current[$k] = self::$value;
 
                 break;
 
             } else {
-                $this->current[$k] = null;
+
+                self::$current[$k] = null;
+
             }
 
         }
 
-        return $this->value;
+        return self::$value;
     }
 
-    public function setKeyToValue($key, $value, $local)
+    public static function setKeyToValue($key, $value, $local)
     {
         $key;
         $value;
-        //   $this->ensureInitialized();
-        $keys = explode(".", $key);
 
-        for ($i = 0; $i < count($keys); $i++) {
+        $array = explode(".", $key);
 
-            $k = $keys[$i];
+        $array = array_reverse($array);
 
-            if ($i === (count($keys) - 1)) {
+        foreach ($array as $key => $val) {
 
-                $this->current[$k] = $value;
+            $setval = ($key === 0) ? $value : self::$result;
 
-                break;
+            self::$result = [
 
-            } else {
-                $this->current[$k] = ' ';
-            }
+                $val => $setval
+
+            ];
 
         }
-        // print_r($this->current);
-        return $this->current;
+//print_r(self::$result);
+        return self::$result;
+
     }
+
+    public static function arraysEqual($a, $b)
+    {
+        if (!is_array($a) || !is_array($b)) return false;
+
+        if ($a === $b) return true;
+
+        if (count($a) !== count($b)) return false;
+
+        for ($i = 0; $i < count($a); ++$i) {
+
+            if ($a[$i] !== $b[$i]) return false;
+
+        }
+        return true;
+    }
+
 
     /**
      * Sets a value in the current context.
@@ -123,40 +144,50 @@ class Context
      * @param local {Boolean} If true, the value will only be added to the localContext.
      */
 
-    public function set($key, $value, $local)
+    public static function set($key, $value, $local)
     {
         $key;
         $value;
 
-        $context = $local ? self::$localContext : self::$remoteContext;
 
-        $before = $this->getValueForKey($key, $local);
+        switch ($local) {
 
-        $context = $this->setKeyToValue($key, $value, $local);
+            case true:
 
-        if ($local == true) {
+                self::$localContext[] = self::setKeyToValue($key, $value, $local);
 
-            self::$localContext = $this->setKeyToValue($key, $value, $local);
+                break;
 
-        } else {
+            case false:
 
-            self::$remoteContext = $this->setKeyToValue($key, $value, $local);
+                self::$remoteContext[] = self::setKeyToValue($key, $value, $local);
+
+                break;
 
         }
 
-        self::$remoteContext  = !empty( self::$remoteContext ) ?  self::$remoteContext : "";
+        //   $before = self::getValueForKey($key,  self::$remoteContext );
 
-        self::$localContext  = !empty( self::$localContext ) ?  self::$remoteContext : "" ;
+        /*    print_r($before);
 
-        echo "Local" . "<br>";
+            if ($before === $value || self::arraysEqual($before, $value)) {
 
-        print_r(self::$localContext);
+                return false;
 
-        echo "<br>" .  "Remote" . "<br>";
+            }*/
+//return   self::$localContext;
 
-        print_r(self::$remoteContext);
+    }
 
-        echo "<br>";
+    public static function locContext()
+    {
+
+        return self::$localContext;
+
+    }
+
+    public static function remContext()
+    {
 
         return self::$remoteContext;
 
@@ -172,9 +203,10 @@ class Context
             echo $error = 'Evolv: The context is already initialized';
 
         }
+        /*
+                self::$remoteContext = self::$remoteContext ? Options::Parse(self::$remoteContext) : [];
+                self::$localContext = self::$remoteContext ? Options::Parse(self::$localContext) : [];*/
 
-        self::$remoteContext = self::$remoteContext ? Options::Parse(self::$remoteContext) : [];
-        self::$localContext = self::$remoteContext ? Options::Parse(self::$localContext) : [];
         $context->initialized = true;
     }
 

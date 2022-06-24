@@ -8,14 +8,10 @@ use  App\EvolvStore\Store;
 use  App\EvolvContext\Context;
 use  App\EvolvOptions\Options;
 
-
 require 'vendor/autoload.php';
 require_once __DIR__ . '/EvolvStore.php';
-require_once __DIR__ . '/EvolvContext.php';
-
 
 ini_set('display_errors', 'on');
-
 
 class EvolvClient extends Store
 {
@@ -70,6 +66,10 @@ class EvolvClient extends Store
 
         $this->pull($options);
 
+        $configKeyStates = $this->configKeyStates;
+
+        $this->evaluatePredicates($configKeyStates);
+
         if ($this->initialized == true) {
 
             echo('Evolv: Client is already initialized');
@@ -88,22 +88,31 @@ class EvolvClient extends Store
 
         $store->initialized($this->context, $options);
 
+
     }
 
     public function set($key, $value, $local)
     {
 
-        $result = $this->context->set($key, $value, $local);
+        $result = Context::set($key, $value, $local);
 
-        $this->remoteContext = Context::$remoteContext;
+        $this->remoteContext();
 
-        $this->localContext = Context::$localContext;
-
-        return $result;
+        $this->localContext();
 
     }
 
+    public function localContext(){
 
+        return Context::locContext();
+
+    }
+
+    public function remoteContext(){
+
+        return Context::remContext();
+
+    }
 
     public function __construct($options)
     {
@@ -115,17 +124,18 @@ class EvolvClient extends Store
 
         $store = new Store();
 
+
         Context::initialize($options['uid'], $this->remoteContext, $this->localContext);
 
-        $this->remoteContext = Context::$remoteContext;
+      //  $this->remoteContext = Context::$remoteContext;
 
-        $this->print_r($this->remoteContext);
+     //  $this->localContext = Context::$localContext;
 
-        $this->localContext = Context::$localContext;
+     //   $this->print_r($this->localContext);
 
-        $store->initialized($this->context, $options);
+     //   $store->initialized($this->context, $options);
 
-        $store->pull($options);
+      //  $store->pull($options);
 
 
     }
