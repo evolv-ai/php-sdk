@@ -90,6 +90,7 @@ class Store
 
         }
 
+
     }
 
     public function print_r($arr)
@@ -186,12 +187,17 @@ class Store
 
             if (is_array($value)) {
 
-                $key = (!preg_match('/[_]/i', $key) && !empty($key) && $key != 'rules') ? $key : '';
+                //$key = (!empty($key)) ? $key : '';
 
-                if (isset($value['_predicate'])) {
+
+                if (isset($value['_predicate']) && isset($value['_is_entry_point']) && $value['_is_entry_point'] == 1) {
+
+                    $this->predicate[$key] = $value;
+
+                }
+                else if (isset($value['_predicate'])){
 
                     $this->predicate[$key] = $value['_predicate'];
-
                 }
 
                 $this->getPredicate($value);
@@ -204,9 +210,17 @@ class Store
 
     public function evaluatePredicates($config)
     {
+        if(empty($config) || count($config)==0){
+
+            echo "Config empty!";
+
+            return false;
+
+        }
+
         $predicates = $this->getPredicate($config);
 
-      //  $this->print_r($predicates);
+        $this->print_r($predicates);
     }
 
 

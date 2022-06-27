@@ -20,19 +20,17 @@ $client->initialize($json,'user_id',$remoteContext, $localContext);
 
 $key = $client->getActiveKeys();
 
-//$client->print_r($key);
+$client->print_r($key);
 
 
 //$client->set("age/mr","234",true);
-//$client->set("web.wesss.lkjhgf","http://fgh",true);
-//$client->set("23asdr","234hg",false);
-//$client->set("234dc","234hg",false);
-//$client->set("23uju","234hgqq",false);
-
-//$client->set("age/mr","234",false);
+$client->set("native.newUser",true,true);
+$client->set("native.pageCategory",'home',true);
 
 
-//$client->print_r($client->localContext());
+
+
+$client->print_r($client->localContext());
 
 //$client->print_r($client->remoteContext());
 

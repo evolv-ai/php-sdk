@@ -9,7 +9,34 @@ require_once __DIR__ . '/EvolvOptions.php';
 class Predicate
 {
 
-    function regexFromString($string)
+
+    public function exists($a)
+    {
+        return $a !== null && $a !== ' ';
+    }
+
+
+    public function greater_than($a, $b)
+    {
+        return $a >= $b;
+    }
+
+    public function greater_than_or_equal_to($a, $b)
+    {
+        return $a >= $b;
+    }
+
+    public function is_true($a)
+    {
+        return $a === true;
+    }
+
+    public function is_false($a)
+    {
+        return $a === false;
+    }
+
+    public function regexFromString($string)
     {
         if (!strpos($string, '/')) {
 
@@ -61,9 +88,29 @@ class Predicate
 
             return array_key_exists($key, $context) ? $context[$key] : false;
 
-        };
+        }
+
         return valueFromKey(substr($key, 0, $nextToken), substr($key, 0, $nextToken + 1));
     }
+
+    /*    function evaluate($context, $predicate)
+        {
+            $result = [
+                $passed = [],
+                $failed = [],
+                $touched = []
+            ];
+
+            $result['rejected'] = !$evaluatePredicate($context, $predicate, $result['passed'], $result['failed']);
+
+            $result['passed'] = foreach (function ($item) {
+
+            $result['touched'] . array_push($item['field']);
+        }) ;
+
+
+return $result;
+}*/
 
 }
 
