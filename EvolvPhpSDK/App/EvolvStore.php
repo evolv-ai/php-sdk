@@ -181,36 +181,11 @@ class Store
 
     }
 
-    public function getPredicate($config)
+
+    public function evaluatePredicates($context, $config)
     {
-        foreach ($config as $key => $value) {
 
-            if (is_array($value)) {
-
-                //$key = (!empty($key)) ? $key : '';
-
-
-                if (isset($value['_predicate']) && isset($value['_is_entry_point']) && $value['_is_entry_point'] == 1) {
-
-                    $this->predicate[$key] = $value;
-
-                }
-                else if (isset($value['_predicate'])){
-
-                    $this->predicate[$key] = $value['_predicate'];
-                }
-
-                $this->getPredicate($value);
-
-            }
-        }
-        return $this->predicate;
-
-    }
-
-    public function evaluatePredicates($config)
-    {
-        if(empty($config) || count($config)==0){
+        if (empty($config) || count($config) == 0) {
 
             echo "Config empty!";
 
@@ -218,9 +193,15 @@ class Store
 
         }
 
-        $predicates = $this->getPredicate($config);
+        $predicate = new Predicate();
 
-        $this->print_r($predicates);
+        $predicates = $predicate->getPredicate($config);
+
+        $predicate->evaluate($context, $predicates);
+
+
+        //$this->print_r($predicates);
+
     }
 
 

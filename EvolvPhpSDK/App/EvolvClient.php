@@ -66,9 +66,6 @@ class EvolvClient extends Store
 
         $this->pull($options);
 
-        $configKeyStates = $this->configKeyStates;
-
-        $this->evaluatePredicates($configKeyStates);
 
         if ($this->initialized == true) {
 
@@ -99,6 +96,13 @@ class EvolvClient extends Store
         $this->remoteContext();
 
         $this->localContext();
+
+        $configKeyStates = $this->configKeyStates;
+
+        $context = $this->localContext();
+
+        $this->evaluatePredicates($context, $configKeyStates);
+
 
     }
 

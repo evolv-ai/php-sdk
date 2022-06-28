@@ -18,15 +18,16 @@ $localContext = [];
 
 $client->initialize($json,'user_id',$remoteContext, $localContext);
 
-$key = $client->getActiveKeys();
-
-$client->print_r($key);
-
-
-//$client->set("age/mr","234",true);
 $client->set("native.newUser",true,true);
 $client->set("native.pageCategory",'home',true);
 
+//all active
+
+
+$client->set("native.newUser",false,true);
+//false
+
+$key = $client->getActiveKeys();
 
 
 
@@ -36,6 +37,13 @@ $client->print_r($client->localContext());
 
 
 
+/*function convertSpace($string)
+{
+    return $string === true ;
+}
 
+$string = false;
+
+;*/
 
 

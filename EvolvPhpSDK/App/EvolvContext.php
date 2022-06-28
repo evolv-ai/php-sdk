@@ -22,7 +22,7 @@ class Context
     public static $context;
     public static $remoteContext;
     public static $localContext;
-    public static $result = [];
+    public static $result;
 
     /**
      * A unique identifier for the participant.
@@ -112,7 +112,7 @@ class Context
             ];
 
         }
-//print_r(self::$result);
+
         return self::$result;
 
     }
