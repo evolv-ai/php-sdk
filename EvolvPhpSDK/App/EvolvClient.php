@@ -101,7 +101,7 @@ class EvolvClient extends Store
 
         $context = $this->localContext();
 
-        $this->evaluatePredicates($context, $configKeyStates);
+        //$this->evaluatePredicates($context, $configKeyStates);
 
 
     }

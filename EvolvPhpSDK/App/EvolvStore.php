@@ -161,26 +161,30 @@ class Store
 
     public function getActiveKeys()
     {
-        $experiments = $this->configKeyStates['experiments'];
 
-        $experiments = array_reverse($experiments);
+        $predicate = new Predicate();
 
-        $this->getActiveKeyses($experiments);
+        $configKeyStates = $this->configKeyStates;
 
-        $this->current = array_reverse($this->current);
+        $predicates = $predicate->getPredicate($configKeyStates);
 
-        $this->previos = array_reverse($this->previos);
+        $context = $this->localContext();
 
-        $current = $this->setActiveKeys($this->current);
-
-        $previos = $this->setActiveKeys($this->previos);
-
-        $keys = [["current"], $current, ["previos"], $previos];
+        $keys = $predicate->evaluate($context, $predicates );
 
         return $keys;
+    }
+    public function localContext(){
+
+        return Context::locContext();
 
     }
 
+    public function remoteContext(){
+
+        return Context::remContext();
+
+    }
 
     public function evaluatePredicates($context, $config)
     {
@@ -200,7 +204,7 @@ class Store
         $predicate->evaluate($context, $predicates);
 
 
-        //$this->print_r($predicates);
+       // $this->print_r($predicates);
 
     }
 

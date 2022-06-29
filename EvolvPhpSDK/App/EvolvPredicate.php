@@ -11,43 +11,73 @@ class Predicate
 {
     public $predicate = [];
 
+    public $param = [];
+
+    public $a = 'a';
+
+    public $b = 'b';
+
+    public $res;
+
+    public $result;
+
+    public $activeKeys = [];
+
     public function exists($a)
     {
-        return $a = 280;
+        $result = (!empty($a) && isset($a)) ? true : false;
+
+        return $result;
     }
 
     public function convertSpace($string)
     {
-        return $string = "true ";
+        return $string = "true";
     }
 
 
     public function greater_than($a, $b)
     {
-        return $a >= $b;
+        $result = $a >= $b ? true : false;
+
+        return   $result;
     }
 
     public function greater_than_or_equal_to($a, $b)
     {
-        return $a >= $b;
+        $result = $a >= $b ? true : false;
+
+        return   $result;
     }
 
     public function is_true($a, $b)
     {
-        echo $b;
-        if ($b == true) {
-            return $b === true;
-        }
+        $result = $a === true ? true : false;
+
+        return $result;
     }
 
     public function is_false($a)
     {
-        return $a === false;
+        $result = $a === false ? true : false;
+
+        return $result;
     }
 
     public function loose_equal($a, $b)
     {
-        return $a === $b;
+        $result = $a === $b ? true : false;
+
+        return $result;
+    }
+
+
+    function not_exists($a, $b)
+    {
+
+        $result = (!empty($a)) ? true : false;
+
+        return $result;
     }
 
     public function getPredicate($config)
@@ -137,6 +167,7 @@ class Predicate
     public function getKeyFromValeuContext($context)
     {
         $cntxt = [];
+
         foreach ($context as $key => $value) {
 
             if (is_array($value)) {
@@ -148,7 +179,10 @@ class Predicate
                         foreach ($v as $key => $value) {
 
                             $cntxt[$k . "." . $key] = $value;
+
                         }
+                    } else {
+                        $cntxt[$k] = $value;
                     }
                 }
             }
@@ -156,68 +190,117 @@ class Predicate
         return $cntxt;
     }
 
+
     public function evaluatePredicate($context, $config)
     {
 
-        $rules = [];
-
-        $result = [
-
-        ];
+        $activeKeys = [];
 
         $cntxt = $this->getKeyFromValeuContext($context);
 
+        $keys = [];
+
         foreach ($config as $key => $value) {
 
-            //echo $key . "<br>";
+            array_push($keys, $key);
+
+            echo $key . "<br>";
+            echo "<pre>";
+           print_r($value);
+            echo "</pre>";
 
             if (isset($value['rules']) && is_array($value['rules'])) {
 
-                foreach ($value['rules'] as $k => $v) {
+                if (is_array($cntxt) || is_object($cntxt)) {
 
-                    foreach ($cntxt as $key => $value) {
+                    foreach ($cntxt as $keyC => $valueC) {
 
-                        if ($key == $v['field']) {
+                        if ($keyC == $value['rules'][0]['field']) {
 
-//echo $key . " - " . $v['field']  . "<br>";
+                            $a = is_array($valueC) ? is_array($valueC) : $valueC;
 
-                         // echo  $a = $value;
+                            $b = $value['rules'][0]['value'];
 
-                            $b = $v['value'];
+                            $callback = $value['rules'][0]['operator'];
 
-                          //  $param = [$a, $b];
+                            $this->result = call_user_func_array([$this, $callback], [$a, $b]);
 
-                          //  print_r($param);
+                            if ($this->result == true) {
 
-                          $result =  array_walk($param, [$this, $v['operator']]);
-                          // print_r($result);
+                                $current = current($keys);
+
+                                $next = next($keys);
+
+                                $next = next($keys);
+
+                                $prev = prev($keys);
+
+                                $end = end($keys);
+
+                                if (isset($prev)  && $key !== 0  &&  $next == $key || !isset($next)){
+
+                                    $activeKeys[] = $prev . "." . $key;
+
+                                }
+                                else if (isset($next) && isset($prev) && $key !== 0 &&  $next !== $key)  {
+
+                                    $activeKeys[] = $current . "." . $key;
+
+                                }
+                                else {
+
+                                    $activeKeys[] = $key;
+
+                                }
+                            }
                         }
                     }
                 }
-                if ( $result === true){
-
-                }
             }
+            foreach ($value as $k => $val) {
 
-            if (is_int($key) == false) {
-                $rules[] = $key;
-            }
-            if (is_array($value)) {
+                if ($this->res == 1) {
 
-                foreach ($value as $k => $v) {
+                    if ($k[0] !== "_" && is_array($val) && $k !== 'rules') {
 
-                    if ($k[0] !== "_" && is_array($v) && $k !== 'rules') {
+                        $activeKeys[] = $key . "." . $k;
 
-                        $rules[][$key][$k] = $v['_values'];
-
-                    };
-
+                    }
 
                 }
 
-            }
+                if (isset($val['rules']) && is_array($val['rules'])) {
 
+                    if (is_array($cntxt) || is_object($cntxt)) {
+
+                        foreach ($cntxt as $keyC => $valueC) {
+
+                            if ($keyC == $val['rules'][0]['field']) {
+
+                                $a = $valueC;
+
+                                $b = $val['rules'][0]['value'];
+
+                                $callback = $val['rules'][0]['operator'];
+
+                                $this->res = call_user_func_array([$this, $callback], [$a, $b]);
+
+                            }
+                        }
+                        if ($this->res == 1) {
+
+                            $activeKeys[] = $key;
+                        }
+
+                    }
+
+                }
+
+            }
         }
+
+        return $activeKeys;
+
     }
 
     public function item($item)
@@ -233,13 +316,10 @@ class Predicate
             'touched' => []
         ];
 
-        $a = $this->evaluatePredicate($context, $predicate);
+        $active = $this->evaluatePredicate($context, $predicate);
 
-        // print_r( $a );
 
-        //$result['touched'] = $this->item($item);
-
-        return $result;
+        return $active;
     }
 
 }

@@ -20,30 +20,17 @@ $client->initialize($json,'user_id',$remoteContext, $localContext);
 
 $client->set("native.newUser",true,true);
 $client->set("native.pageCategory",'home',true);
-
+$client->set("native.pageCategory",'pdp',true);
+//$client->set("extra_key",'not_exists',true);
 //all active
 
 
-$client->set("native.newUser",false,true);
-//false
-
 $key = $client->getActiveKeys();
 
+$client->print_r($key);
 
-
-$client->print_r($client->localContext());
+//$client->print_r($client->localContext());
 
 //$client->print_r($client->remoteContext());
-
-
-
-/*function convertSpace($string)
-{
-    return $string === true ;
-}
-
-$string = false;
-
-;*/
 
 
