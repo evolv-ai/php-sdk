@@ -154,7 +154,7 @@ class Predicate
 
         }
 
-        return valueFromKey(substr($key, 0, $nextToken), substr($key, 0, $nextToken + 1));
+        return $this->valueFromKey(substr($key, 0, $nextToken), substr($key, 0, $nextToken + 1));
     }
 
     public function getKeyFromValeuContext($context)

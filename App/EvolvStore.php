@@ -3,9 +3,8 @@
 namespace App\EvolvStore;
 
 use App\EvolvContext\Context;
-use  App\EvolvOptions\Options;
 use  App\EvolvPredicate\Predicate;
-use Faker\Provider\Person;
+use HttpClient;
 
 require_once __DIR__ . '/EvolvOptions.php';
 require_once __DIR__ . '/EvolvContext.php';
@@ -35,28 +34,13 @@ class Store
 
     public function pull($environment,$uid,$endpoint)
     {
-        $opts = array(
-            'https' => array(
-                'method' => "GET",
-                'header' => "Content-type: application/json \r\n"
-            )
-        );
+        $httpClient = new HttpClient();
 
-        $allocation = $endpoint . '/' . $environment . '/' . $uid . '/allocations';
+        $allocationUrl = $endpoint . '/' . $environment . '/' . $uid . '/allocations';
+        $configUrl = $endpoint . '/' . $environment . '/' . $uid . '/configuration.json';
 
-        $config = $endpoint . '/' . $environment . '/' . $uid . '/configuration.json';
-
-        $opts = stream_context_create($opts);
-
-        $arr_location = file_get_contents($allocation, false, $opts);
-
-        $arr_config = file_get_contents($config, false, $opts);
-
-        if (!$arr_config && !$arr_location) {
-
-            exit("Not active path or configuration!");
-
-        }
+        $arr_location =  $httpClient->request($allocationUrl);
+        $arr_config = $httpClient->request($configUrl);
 
         $arr_config = json_decode($arr_config, true);
 
@@ -79,7 +63,6 @@ class Store
             array_push($this->configKeyStates['experiments'], $v);
 
         }
-
     }
 
     public function getActiveKeys()

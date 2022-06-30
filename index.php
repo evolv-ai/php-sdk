@@ -127,16 +127,15 @@ require 'vendor/autoload.php';
                         $client->set("native.newUser", true, true);
                         $client->set("native.pageCategory", 'pdp', true);
                         $client->set("extra_key", 'fg', true);
-                        //all active
+                        //all activex
 
                         $key = $client->getActiveKeys();
 
+                        echo 'Active Keys:'.'<br>';
                         $client->print_r($key);
 
+                        echo 'Context:'.'<br>';
                         $client->print_r($client->localContext());
-
-                        //$client->print_r($client->remoteContext());
-
                         ?>
                     </div>
                 </div>
