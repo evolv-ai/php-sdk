@@ -206,7 +206,6 @@ class Predicate
 
         foreach ($config as $key => $value) {
 
-
             foreach ($value as $key => $value) {
 
                 if (isset($value['_predicate'])) {
@@ -271,7 +270,7 @@ class Predicate
 
                                 if ($this->parentPredicate == 1 && $this->res == 1) {
 
-                                    if ($k[0] !== "_" && is_array($val) && $k !== 'rules') {
+                                    if ($k[0] !== "_" && is_array($val) && $k !== 'rules' && !isset($val['_predicate']['rules'])) {
 
                                         $activeKeys[] = $key . "." . $k;
 
@@ -279,7 +278,7 @@ class Predicate
 
                                         foreach ($cntxt as $keyC => $valueC) {
 
-                                            if ($keyC == $val['_predicate']['rules'][0]['field']) {
+                                            if ($keyC == 'extra_key') {
 
                                                 $a = is_array($valueC) ? is_array($valueC) : $valueC;
 
@@ -295,13 +294,13 @@ class Predicate
                                                     $activeKeys[] = $key . "." . $k;
                                                     //  }
                                                 }
-                                            }
-                                        }
+                                            } else if ($keyC !== 'extra_key') {
+                                                $a = $val['_predicate']['rules'][0]['value'];
 
-                                        if ($val['_predicate']['rules'][0]['field'] == 'extra_key') {
-                                            $a = $val['_predicate']['rules'][0]['value'];
-                                            $callback = $val['_predicate']['rules'][0]['operator'];
-                                            $this->res = call_user_func_array([$this, $callback], [$a, $b]);
+                                                $callback = $val['_predicate']['rules'][0]['operator'];
+
+                                                $this->res = call_user_func_array([$this, $callback], [$a, $b]);
+                                            }
                                         }
 
                                         if ($this->res == true && $this->parentPredicate == true) {

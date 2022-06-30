@@ -125,8 +125,8 @@ require 'vendor/autoload.php';
 
                         $client->initialize($environment, $uid, $endpoint, $remoteContext = [], $localContext = []);
                         $client->set("native.newUser", true, true);
-                        $client->set("native.pageCategory", 'pdp', true);
-                        $client->set("extra_key", 'fg', true);
+                        $client->set("native.pageCategory", 'home', true);
+                        //$client->set("extra_key", 'sdfsd', true);
                         //all active
 
                         $key = $client->getActiveKeys();
