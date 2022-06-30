@@ -27,9 +27,6 @@ class ActiveKeysTest extends TestCase {
      * @test
     */
     public function shouldReturnEmptyWhenRootPredicateNotMatched() {
-        // Arrange
-        $this->client->set('native.newUser', false, true);
-
         // Act
         $activeKeys = $this->client->getActiveKeys();
 
