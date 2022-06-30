@@ -89,11 +89,11 @@ class Store
 
         $configKeyStates = $this->configKeyStates;
 
-        $predicates = $predicate->getPredicate($configKeyStates);
+       // $predicates = $predicate->getPredicate($configKeyStates);
 
         $context = $this->localContext();
 
-        $keys = $predicate->evaluate($context, $predicates );
+        $keys = $predicate->evaluate($context,  $configKeyStates );
 
         return $keys;
     }

@@ -3,9 +3,9 @@ declare (strict_types=1);
 
 use  App\EvolvClient\EvolvClient;
 
-require_once  __DIR__ . '/App/EvolvClient.php';
+require_once __DIR__ . '/App/EvolvClient.php';
 
-require  'vendor/autoload.php';
+require 'vendor/autoload.php';
 ?>
 <html lang="en" class="no-js">
 <!-- BEGIN HEAD -->
@@ -62,13 +62,20 @@ require  'vendor/autoload.php';
             <div class="collapse navbar-collapse nav-collapse">
                 <div class="menu-container">
                     <ul class="nav navbar-nav navbar-nav-right">
-                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#body">Home</a></li>
-                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#about">About</a></li>
-                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#products">Products</a></li>
-                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#pricing">Pricing</a></li>
-                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#work">Work</a></li>
-                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#service">Service</a></li>
-                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#contact">Contact</a></li>
+                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#body">Home</a>
+                        </li>
+                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover"
+                                                            href="#about">About</a></li>
+                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#products">Products</a>
+                        </li>
+                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#pricing">Pricing</a>
+                        </li>
+                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#work">Work</a>
+                        </li>
+                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#service">Service</a>
+                        </li>
+                        <li class="js_nav-item nav-item"><a class="nav-item-child nav-item-hover" href="#contact">Contact</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -89,7 +96,8 @@ require  'vendor/autoload.php';
                 <div class="carousel-centered">
                     <div class="margin-b-40">
                         <h1 class="carousel-title">Hello, world!</h1>
-                        <p class="color-white">Lorem ipsum dolor amet consectetur adipiscing dolore magna aliqua <br/> enim minim estudiat veniam siad venumus dolore</p>
+                        <p class="color-white">Lorem ipsum dolor amet consectetur adipiscing dolore magna aliqua <br/>
+                            enim minim estudiat veniam siad venumus dolore</p>
                     </div>
                     <a href="#" class="btn-theme btn-theme-sm btn-white-brd text-uppercase">Explore</a>
                 </div>
@@ -113,13 +121,12 @@ require  'vendor/autoload.php';
                         $uid = 'user_id';
                         $endpoint = 'https://participants.evolv.ai/v1';
 
-                        $client = new EvolvClient($environment,$uid,$endpoint);
+                        $client = new EvolvClient($environment, $uid, $endpoint);
 
                         $client->initialize($environment, $uid, $endpoint, $remoteContext = [], $localContext = []);
-                        $client->set("native.newUser",true,true);
-                       // $client->set("native.pageCategory",'home',true);
-                       // $client->set("native.pageCategory",'pdp',true);
-                        $client->set("extra_key",'',true);
+                        $client->set("native.newUser", true, true);
+                        $client->set("native.pageCategory", 'pdp', true);
+                        $client->set("extra_key", 'fg', true);
                         //all active
 
                         $key = $client->getActiveKeys();
@@ -136,7 +143,9 @@ require  'vendor/autoload.php';
                 <div class="col-md-5 col-sm-5 md-margin-b-60">
                     <div class="margin-t-50 margin-b-30">
                         <h2>Why Choose Us?</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
                     </div>
                     <a href="#" class="btn-theme btn-theme-sm btn-white-bg text-uppercase">Explore</a>
                 </div>
@@ -147,42 +156,57 @@ require  'vendor/autoload.php';
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingOne">
                                     <h4 class="panel-title">
-                                        <a class="panel-title-child" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <a class="panel-title-child" role="button" data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseOne" aria-expanded="true"
+                                           aria-controls="collapseOne">
                                             Exceptional Frontend Framework
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                                     aria-labelledby="headingOne">
                                     <div class="panel-body">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch.
+                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                                        richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
+                                        brunch.
                                     </div>
                                 </div>
                             </div>
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingTwo">
                                     <h4 class="panel-title">
-                                        <a class="collapsed panel-title-child" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <a class="collapsed panel-title-child" role="button" data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                                           aria-controls="collapseTwo">
                                             Modern Design Trends
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+                                     aria-labelledby="headingTwo">
                                     <div class="panel-body">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch.
+                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                                        richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
+                                        brunch.
                                     </div>
                                 </div>
                             </div>
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingThree">
                                     <h4 class="panel-title">
-                                        <a class="collapsed panel-title-child" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <a class="collapsed panel-title-child" role="button" data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseThree" aria-expanded="false"
+                                           aria-controls="collapseThree">
                                             Beatifully Crafted Code
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel"
+                                     aria-labelledby="headingThree">
                                     <div class="panel-body">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch.
+                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                                        richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
+                                        brunch.
                                     </div>
                                 </div>
                             </div>
@@ -203,7 +227,8 @@ require  'vendor/autoload.php';
         <div class="row margin-b-40">
             <div class="col-sm-6">
                 <h2>Latest Products</h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore magna aliqua enim minim veniam exercitation</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore magna
+                    aliqua enim minim veniam exercitation</p>
             </div>
         </div>
         <!--// end row -->
@@ -215,7 +240,8 @@ require  'vendor/autoload.php';
                     <img class="img-responsive" src="src/img/970x647/01.jpg" alt="Latest Products Image">
                 </div>
                 <h4><a href="#">Workspace</a> <span class="text-uppercase margin-l-20">Management</span></h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut consequat siad esqudiat dolor</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut
+                    consequat siad esqudiat dolor</p>
                 <a class="link" href="#">Read More</a>
             </div>
             <!-- End Latest Products -->
@@ -226,7 +252,8 @@ require  'vendor/autoload.php';
                     <img class="img-responsive" src="src/img/970x647/02.jpg" alt="Latest Products Image">
                 </div>
                 <h4><a href="#">Minimalism</a> <span class="text-uppercase margin-l-20">Developmeny</span></h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut consequat siad esqudiat dolor</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut
+                    consequat siad esqudiat dolor</p>
                 <a class="link" href="#">Read More</a>
             </div>
             <!-- End Latest Products -->
@@ -237,7 +264,8 @@ require  'vendor/autoload.php';
                     <img class="img-responsive" src="src/img/970x647/03.jpg" alt="Latest Products Image">
                 </div>
                 <h4><a href="#">Cleant Style</a> <span class="text-uppercase margin-l-20">Design</span></h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut consequat siad esqudiat dolor</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut
+                    consequat siad esqudiat dolor</p>
                 <a class="link" href="#">Read More</a>
             </div>
             <!-- End Latest Products -->
@@ -257,7 +285,7 @@ require  'vendor/autoload.php';
                     <div class="pricing">
                         <div class="margin-b-30">
                             <i class="pricing-icon icon-chemistry"></i>
-                            <h3>Lorem  <span> - $</span> 49</h3>
+                            <h3>Lorem <span> - $</span> 49</h3>
                             <p>Lorem ipsum dolor amet consectetur ut consequat siad esqudiat dolor</p>
                         </div>
                         <ul class="list-unstyled pricing-list margin-b-50">
@@ -317,7 +345,8 @@ require  'vendor/autoload.php';
             <div class="row margin-b-40">
                 <div class="col-sm-6">
                     <h2>Work</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore magna aliqua enim minim veniam exercitation</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore
+                        magna aliqua enim minim veniam exercitation</p>
                 </div>
             </div>
             <!--// end row -->
@@ -341,12 +370,20 @@ require  'vendor/autoload.php';
                                 <div class="row">
                                     <div class="col-sm-8 work-popup-content-divider sm-margin-b-20">
                                         <div class="margin-t-10 sm-margin-t-0">
-                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est
+                                                laborum.</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud.</p>
                                             <ul class="list-inline work-popup-tag">
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a></li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -380,12 +417,20 @@ require  'vendor/autoload.php';
                                 <div class="row">
                                     <div class="col-sm-8 work-popup-content-divider sm-margin-b-20">
                                         <div class="margin-t-10 sm-margin-t-0">
-                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est
+                                                laborum.</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud.</p>
                                             <ul class="list-inline work-popup-tag">
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a></li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -419,12 +464,20 @@ require  'vendor/autoload.php';
                                 <div class="row">
                                     <div class="col-sm-8 work-popup-content-divider sm-margin-b-20">
                                         <div class="margin-t-10 sm-margin-t-0">
-                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est
+                                                laborum.</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud.</p>
                                             <ul class="list-inline work-popup-tag">
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a></li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -458,12 +511,20 @@ require  'vendor/autoload.php';
                                 <div class="row">
                                     <div class="col-sm-8 work-popup-content-divider sm-margin-b-20">
                                         <div class="margin-t-10 sm-margin-t-0">
-                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est
+                                                laborum.</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud.</p>
                                             <ul class="list-inline work-popup-tag">
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a></li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -497,12 +558,20 @@ require  'vendor/autoload.php';
                                 <div class="row">
                                     <div class="col-sm-8 work-popup-content-divider sm-margin-b-20">
                                         <div class="margin-t-10 sm-margin-t-0">
-                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est
+                                                laborum.</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud.</p>
                                             <ul class="list-inline work-popup-tag">
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a></li>
-                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a></li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Design,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Coding,</a>
+                                                </li>
+                                                <li class="work-popup-tag-item"><a class="work-popup-tag-link" href="#">Portfolio</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -535,7 +604,8 @@ require  'vendor/autoload.php';
             <div class="row margin-b-40">
                 <div class="col-sm-6">
                     <h2>Services</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore magna aliqua enim minim veniam exercitation</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incididunt ut laboret dolore
+                        magna aliqua enim minim veniam exercitation</p>
                 </div>
             </div>
             <!--// end row -->
@@ -548,7 +618,8 @@ require  'vendor/autoload.php';
                         </div>
                         <div class="service-info">
                             <h3>Art Of Coding</h3>
-                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat dolor</p>
+                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat
+                                dolor</p>
                         </div>
                         <a href="#" class="content-wrapper-link"></a>
                     </div>
@@ -560,7 +631,8 @@ require  'vendor/autoload.php';
                         </div>
                         <div class="service-info">
                             <h3 class="color-white">Responsive Design</h3>
-                            <p class="color-white margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat dolor</p>
+                            <p class="color-white margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad
+                                esqudiat dolor</p>
                         </div>
                         <a href="#" class="content-wrapper-link"></a>
                     </div>
@@ -572,7 +644,8 @@ require  'vendor/autoload.php';
                         </div>
                         <div class="service-info">
                             <h3>Feature Reach</h3>
-                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat dolor</p>
+                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat
+                                dolor</p>
                         </div>
                         <a href="#" class="content-wrapper-link"></a>
                     </div>
@@ -588,7 +661,8 @@ require  'vendor/autoload.php';
                         </div>
                         <div class="service-info">
                             <h3>Useful Documentation</h3>
-                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat dolor</p>
+                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat
+                                dolor</p>
                         </div>
                         <a href="#" class="content-wrapper-link"></a>
                     </div>
@@ -600,7 +674,8 @@ require  'vendor/autoload.php';
                         </div>
                         <div class="service-info">
                             <h3>Fast Delivery</h3>
-                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat dolor</p>
+                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat
+                                dolor</p>
                         </div>
                         <a href="#" class="content-wrapper-link"></a>
                     </div>
@@ -612,7 +687,8 @@ require  'vendor/autoload.php';
                         </div>
                         <div class="service-info">
                             <h3>Free Plugins</h3>
-                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat dolor</p>
+                            <p class="margin-b-5">Lorem ipsum dolor amet consectetur ut consequat siad esqudiat
+                                dolor</p>
                         </div>
                         <a href="#" class="content-wrapper-link"></a>
                     </div>
@@ -633,7 +709,8 @@ require  'vendor/autoload.php';
                 <!-- Contact List -->
                 <div class="col-sm-4 sm-margin-b-50">
                     <h3><a href="#">New York</a> <span class="text-uppercase margin-l-20">Head Office</span></h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut consequat siad esqudiat dolor</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor
+                        magna ut consequat siad esqudiat dolor</p>
                     <ul class="list-unstyled contact-list">
                         <li><i class="margin-r-10 color-base icon-call-out"></i> 1 012 3456 7890</li>
                         <li><i class="margin-r-10 color-base icon-envelope"></i> hq@aitOnepage.com</li>
@@ -644,7 +721,8 @@ require  'vendor/autoload.php';
                 <!-- Contact List -->
                 <div class="col-sm-4 sm-margin-b-50">
                     <h3><a href="#">London</a> <span class="text-uppercase margin-l-20">Operation</span></h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut consequat siad esqudiat dolor</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor
+                        magna ut consequat siad esqudiat dolor</p>
                     <ul class="list-unstyled contact-list">
                         <li><i class="margin-r-10 color-base icon-call-out"></i> 44 77 3456 7890</li>
                         <li><i class="margin-r-10 color-base icon-envelope"></i> operation@AitOnepage.com</li>
@@ -655,7 +733,8 @@ require  'vendor/autoload.php';
                 <!-- Contact List -->
                 <div class="col-sm-4 sm-margin-b-50">
                     <h3><a href="#">Singapore</a> <span class="text-uppercase margin-l-20">Finance</span></h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut consequat siad esqudiat dolor</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor
+                        magna ut consequat siad esqudiat dolor</p>
                     <ul class="list-unstyled contact-list">
                         <li><i class="margin-r-10 color-base icon-call-out"></i> 50 012 456 7890</li>
                         <li><i class="margin-r-10 color-base icon-envelope"></i> finance@AitOnepage.com</li>
@@ -722,7 +801,8 @@ require  'vendor/autoload.php';
                 <img class="footer-logo" src="src/img/logo-dark.png" alt="Aitonepage Logo">
             </div>
             <div class="col-xs-6 text-right">
-                <p class="margin-b-0"><a class="fweight-700" href="#">Aitonepage</a> Theme Powered by: <a class="fweight-700" href="#">Lorem</a></p>
+                <p class="margin-b-0"><a class="fweight-700" href="#">Aitonepage</a> Theme Powered by: <a
+                            class="fweight-700" href="#">Lorem</a></p>
             </div>
         </div>
         <!--// end row -->
