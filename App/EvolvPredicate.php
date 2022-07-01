@@ -22,6 +22,8 @@ class Predicate
 
     public $parentPredicate = false;
 
+    public $extra_key = false;
+
     public function exists($a)
     {
         $result = (!empty($a) && isset($a)) ? true : false;
@@ -79,31 +81,92 @@ class Predicate
         return $result;
     }
 
-    /*    public function getPredicate($config)
-        {
+    public $keys = [];
 
-            $predicate = new Predicate();
+
+    public function getContextKey($cntxt, $key, $field, $callback, $b)
+    {
+
+        foreach ($cntxt as $keyC => $valueC) {
+
+            $this->extra_key = $keyC == "extra_key" ? true : false;
+
+            if ($keyC == $field && $this->extra_key == false) {
+
+                $a = is_array($valueC) ? is_array($valueC) : $valueC;
+
+                $this->result = call_user_func_array([$this, $callback], [$a, $b]);
+
+                if ($callback == "is_true" && $this->result === true) $this->parentPredicate = true;
+
+                if ($this->result == true && $this->parentPredicate == true) {
+
+                    if ($key !== 0) {
+                        $this->activeKeys[] = $key;
+                    }
+                }
+            }
+        }
+    }
+
+
+    public function evaluatePredicate($context, $config)
+    {
+        $cntxt = $this->getKeyFromValeuContext($context);
+
+        if (is_array($config)) {
 
             foreach ($config as $key => $value) {
 
-                if (is_array($value)) {
+                if (is_array($value) && isset($value["_predicate"])) {
 
-                    if (isset($value['_predicate']) && isset($value['_is_entry_point']) && $value['_is_entry_point'] == 1) {
+                    if (is_array($cntxt) || is_object($cntxt)) {
 
-                        $this->predicate[$key] = $value;
+                        $field = $value['_predicate']['rules'][0]['field'];
 
-                    } else if (isset($value['_predicate'])) {
+                        $b = $value['_predicate']['rules'][0]['value'];
 
-                        $this->predicate[$key] = $value['_predicate'];
+                        $callback = $value['_predicate']['rules'][0]['operator'];
+
+                        $combinator = $value['_predicate']['combinator'];
+
+                        $this->getContextKey($cntxt, $key, $field, $callback, $b);
+
+                        if ( $combinator == "and" && $this->result == true && $this->parentPredicate == true) {
+
+                            foreach ($value as $k => $val) {
+
+                                if ($k[0] !== "_" && is_array($val) && count($val) > 0 && !isset($val['_predicate'])) {
+
+                                    $this->activeKeys[] = $key . "." . $k;
+
+                                } else if (isset($val['_predicate'])) {
+
+                                    $field = $val['_predicate']['rules'][0]['field'];
+
+                                    $callback  = $val['_predicate']['rules'][0]['operator'];
+
+                                    if ($field == 'extra_key' && $this->extra_key == false) {
+
+                                        $this->activeKeys[] = $key . "." . $k;
+                                    }
+                                    else{
+                                        $this->getContextKey($cntxt, $k, $field, $callback, $b);
+                                    }
+
+                                }
+                            }
+
+                        }
+
                     }
 
-
-
                 }
+                $this->evaluatePredicate($context, $value);
             }
-            return $this->predicate;
-
-        }*/
+        }
+        return $this->activeKeys;
+    }
 
 
     public function regexFromString($string)
@@ -154,7 +217,7 @@ class Predicate
 
         }
 
-        return $this->valueFromKey(substr($key, 0, $nextToken), substr($key, 0, $nextToken + 1));
+        return valueFromKey(substr($key, 0, $nextToken), substr($key, 0, $nextToken + 1));
     }
 
     public function getKeyFromValeuContext($context)
@@ -189,140 +252,6 @@ class Predicate
         return $cntxt;
     }
 
-    public function evaluatePredicate($context, $config)
-    {
-
-        $activeKeys = [];
-
-        $keys = [];
-
-        $cntxt = $this->getKeyFromValeuContext($context);
-
-
-        foreach ($config as $key => $value) {
-            array_push($keys, $key);
-        }
-
-
-        foreach ($config as $key => $value) {
-
-            foreach ($value as $key => $value) {
-
-                if (isset($value['_predicate'])) {
-
-                    if (is_array($cntxt) || is_object($cntxt)) {
-
-                        foreach ($cntxt as $keyC => $valueC) {
-
-                            if ($keyC == $value['_predicate']['rules'][0]['field']) {
-
-                                $a = is_array($valueC) ? is_array($valueC) : $valueC;
-
-                                $b = $value['_predicate']['rules'][0]['value'];
-
-                                $callback = $value['_predicate']['rules'][0]['operator'];
-
-                                $this->result = call_user_func_array([$this, $callback], [$a, $b]);
-
-                                if ($callback == "is_true") $this->parentPredicate = $this->result;
-
-                                if ($this->result == true && $this->parentPredicate == true) {
-
-                                    if ($key != 0) {
-                                        $activeKeys[] = $key;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    foreach ($value as $key => $value) {
-
-                        if (isset($value['_predicate'])) {
-
-
-                            if (is_array($cntxt) || is_object($cntxt)) {
-
-                                foreach ($cntxt as $keyC => $valueC) {
-
-                                    if ($keyC == $value['_predicate']['rules'][0]['field']) {
-
-                                        $a = is_array($valueC) ? is_array($valueC) : $valueC;
-
-                                        $b = $value['_predicate']['rules'][0]['value'];
-
-                                        $callback = $value['_predicate']['rules'][0]['operator'];
-
-                                        $this->res = call_user_func_array([$this, $callback], [$a, $b]);
-
-                                        if ($this->res == true && $this->parentPredicate == true) {
-
-                                            // if ($key != 0) {
-                                            $activeKeys[] = $key;
-                                            //  }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (isset($value['_predicate']) && $value['_predicate']['combinator'] == "and") {
-                            foreach ($value as $k => $val) {
-
-                                if ($this->parentPredicate == 1 && $this->res == 1) {
-
-                                    if ($k[0] !== "_" && is_array($val) && $k !== 'rules' && !isset($val['_predicate']['rules'])) {
-
-                                        $activeKeys[] = $key . "." . $k;
-
-                                    } else if (is_array($val) && isset($val['_predicate']['rules']) && $this->res == 1) {
-
-                                        foreach ($cntxt as $keyC => $valueC) {
-
-                                            if ($keyC == 'extra_key') {
-
-                                                $a = is_array($valueC) ? is_array($valueC) : $valueC;
-
-                                                $b = $val['_predicate']['rules'][0]['value'];
-
-                                                $callback = $val['_predicate']['rules'][0]['operator'];
-
-                                                $this->res = call_user_func_array([$this, $callback], [$a, $b]);
-
-                                                if ($this->res == true && $this->parentPredicate == true) {
-
-                                                    // if ($key != 0) {
-                                                    $activeKeys[] = $key . "." . $k;
-                                                    //  }
-                                                }
-                                            } else if ($keyC !== 'extra_key') {
-                                                $a = $val['_predicate']['rules'][0]['value'];
-
-                                                $callback = $val['_predicate']['rules'][0]['operator'];
-
-                                                $this->res = call_user_func_array([$this, $callback], [$a, $b]);
-                                            }
-                                        }
-
-                                        if ($this->res == true && $this->parentPredicate == true) {
-                                            $activeKeys[] = $key . "." . $k;
-
-                                        }
-                                    }
-
-                                }
-
-                            }
-                        }
-                    }
-                }
-
-            }
-
-        }
-
-        return $activeKeys;
-
-    }
 
     public
     function item($item)
@@ -338,6 +267,7 @@ class Predicate
             'failed' => [],
             'touched' => []
         ];
+
 
         $active = $this->evaluatePredicate($context, $predicate);
 

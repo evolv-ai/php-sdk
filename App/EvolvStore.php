@@ -32,14 +32,14 @@ class Store
     public $config = null;
     public $current = [];
 
-    public function pull($environment,$uid,$endpoint)
+    public function pull($environment, $uid, $endpoint)
     {
         $httpClient = new HttpClient();
 
         $allocationUrl = $endpoint . '/' . $environment . '/' . $uid . '/allocations';
         $configUrl = $endpoint . '/' . $environment . '/' . $uid . '/configuration.json';
 
-        $arr_location =  $httpClient->request($allocationUrl);
+        $arr_location = $httpClient->request($allocationUrl);
         $arr_config = $httpClient->request($configUrl);
 
         $arr_config = json_decode($arr_config, true);
@@ -72,22 +72,25 @@ class Store
 
         $configKeyStates = $this->configKeyStates;
 
-       // $predicates = $predicate->getPredicate($configKeyStates);
+        // $predicates = $predicate->getPredicate($configKeyStates);
 
         $context = $this->localContext();
 
-        $keys = $predicate->evaluate($context,  $configKeyStates );
+        $keys = $predicate->evaluate($context, $configKeyStates);
+        // $keys = $predicate->getPredicate($context, $configKeyStates);
 
         return $keys;
     }
 
-    public function localContext(){
+    public function localContext()
+    {
 
         return Context::locContext();
 
     }
 
-    public function remoteContext(){
+    public function remoteContext()
+    {
 
         return Context::remContext();
 
@@ -106,7 +109,7 @@ class Store
 
         $predicate = new Predicate();
 
-        $predicates = $predicate->getPredicate($config);
+        $predicates = $predicate->getPredicate($context, $config);
 
         $predicate->evaluate($context, $predicates);
 
@@ -133,6 +136,12 @@ class Store
         $context = $this->context;
 
     }
+
+/*    function createRequestSubscribablePromise($source, $transform, $key)
+    {
+        $resolve = null;
+        $reject = null;
+    }*/
 
 }
 
