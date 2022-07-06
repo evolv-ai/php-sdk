@@ -19,15 +19,15 @@ require 'vendor/autoload.php';
 
     <!-- GLOBAL MANDATORY STYLES -->
     <link href="http://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet" type="text/css">
-    <link href="src/vendor/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
-    <link href="src/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="demo/vendor/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="demo/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
     <!-- PAGE LEVEL PLUGIN STYLES -->
-    <link href="src/css/animate.css" rel="stylesheet">
-    <link href="src/vendor/swiper/css/swiper.min.css" rel="stylesheet" type="text/css"/>
+    <link href="demo/css/animate.css" rel="stylesheet">
+    <link href="demo/vendor/swiper/css/swiper.min.css" rel="stylesheet" type="text/css"/>
 
     <!-- THEME STYLES -->
-    <link href="src/css/layout.css" rel="stylesheet" type="text/css"/>
+    <link href="demo/css/layout.css" rel="stylesheet" type="text/css"/>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico"/>
@@ -51,8 +51,8 @@ require 'vendor/autoload.php';
                 <!-- Logo -->
                 <div class="logo">
                     <a class="logo-wrap" href="#body">
-                        <img class="logo-img logo-img-main" src="src/img/logo.png" alt="Asentus Logo">
-                        <img class="logo-img logo-img-active" src="src/img/logo-dark.png" alt="Asentus Logo">
+                        <img class="logo-img logo-img-main" src="demo/img/logo.png" alt="Asentus Logo">
+                        <img class="logo-img logo-img-active" src="demo/img/logo-dark.png" alt="Asentus Logo">
                     </a>
                 </div>
                 <!-- End Logo -->
@@ -91,7 +91,7 @@ require 'vendor/autoload.php';
     <!-- Wrapper for slides -->
     <div class="carousel-innersdsd" role="listbox">
         <div class="item active">
-            <img class="img-responsive" src="src/img/1920x1080/01.jpg" alt="Slider Image">
+            <img class="img-responsive" src="demo/img/1920x1080/01.jpg" alt="Slider Image">
             <div class="container">
                 <div class="carousel-centered">
                     <div class="margin-b-40">
@@ -120,29 +120,49 @@ require 'vendor/autoload.php';
                         $environment = '758012fca1';
                         $uid = 'user_id';
                         $endpoint = 'https://participants.evolv.ai/v1';
-
                         $client = new EvolvClient($environment, $uid, $endpoint);
-
                         $client->initialize($environment, $uid, $endpoint, $remoteContext = [], $localContext = []);
+
+                        // $client->getActiveKeys();
+
+
                         $client->set("native.newUser", true, true);
-                        $client->set("native.pageCategory", 'home', true);
-                        //$client->set("extra_key", 'sdfsd', true);
-                        //all active
+                        //$client->set("native.pageCategory", 'home', true);
+                        $client->set("native.pageCategory", 'pdp', true);
+                        //  $client->set("extra_key", 'pdp', true);
 
-                        $key = $client->getActiveKeys();
-
-                        $client->print_r($key);
-
-                        $client->print_r($client->localContext());
-
-                        //$client->print_r($client->remoteContext());
+                        //  $client->print_r($client->localContext());
 
                         ?>
                     </div>
                 </div>
                 <div class="col-md-5 col-sm-5 md-margin-b-60">
                     <div class="margin-t-50 margin-b-30">
-                        <h2>Why Choose Us?</h2>
+
+                        <?php
+
+                        $client->set("native.pageCategory", 'home', true);
+
+                        $key = $client->listener();
+
+                        if (in_array('home', $key)) {
+
+                            echo "<h2>Why Choose Us?</h2>";
+
+                        } elseif (in_array('pdp', $key)) {
+
+                            echo "<h2>Helo world</h2>";
+
+                        } else {
+
+                            echo "<h2>Default title!</h2>";
+                        }
+
+                        $client->set("native.pageCategory", 'home', true);
+
+                        $client->get("home.cta_text");
+                        ?>
+
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                             laboris nisi ut aliquip ex ea commodo consequat.</p>
@@ -237,7 +257,7 @@ require 'vendor/autoload.php';
             <!-- Latest Products -->
             <div class="col-sm-4 sm-margin-b-50">
                 <div class="margin-b-20">
-                    <img class="img-responsive" src="src/img/970x647/01.jpg" alt="Latest Products Image">
+                    <img class="img-responsive" src="demo/img/970x647/01.jpg" alt="Latest Products Image">
                 </div>
                 <h4><a href="#">Workspace</a> <span class="text-uppercase margin-l-20">Management</span></h4>
                 <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut
@@ -249,7 +269,7 @@ require 'vendor/autoload.php';
             <!-- Latest Products -->
             <div class="col-sm-4 sm-margin-b-50">
                 <div class="margin-b-20">
-                    <img class="img-responsive" src="src/img/970x647/02.jpg" alt="Latest Products Image">
+                    <img class="img-responsive" src="demo/img/970x647/02.jpg" alt="Latest Products Image">
                 </div>
                 <h4><a href="#">Minimalism</a> <span class="text-uppercase margin-l-20">Developmeny</span></h4>
                 <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut
@@ -261,7 +281,7 @@ require 'vendor/autoload.php';
             <!-- Latest Products -->
             <div class="col-sm-4 sm-margin-b-50">
                 <div class="margin-b-20">
-                    <img class="img-responsive" src="src/img/970x647/03.jpg" alt="Latest Products Image">
+                    <img class="img-responsive" src="demo/img/970x647/03.jpg" alt="Latest Products Image">
                 </div>
                 <h4><a href="#">Cleant Style</a> <span class="text-uppercase margin-l-20">Design</span></h4>
                 <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed tempor incdidunt ut laboret dolor magna ut
@@ -358,7 +378,7 @@ require 'vendor/autoload.php';
                     <!-- Work -->
                     <div class="work work-popup-trigger">
                         <div class="work-overlay">
-                            <img class="full-width img-responsive" src="src/img/800x400/01.jpg" alt="Portfolio Image">
+                            <img class="full-width img-responsive" src="demo/img/800x400/01.jpg" alt="Portfolio Image">
                         </div>
                         <div class="work-popup-overlay">
                             <div class="work-popup-content">
@@ -405,7 +425,7 @@ require 'vendor/autoload.php';
                     <!-- Work -->
                     <div class="work work-popup-trigger">
                         <div class="work-overlay">
-                            <img class="full-width img-responsive" src="src/img/397x415/01.jpg" alt="Portfolio Image">
+                            <img class="full-width img-responsive" src="demo/img/397x415/01.jpg" alt="Portfolio Image">
                         </div>
                         <div class="work-popup-overlay">
                             <div class="work-popup-content">
@@ -452,7 +472,7 @@ require 'vendor/autoload.php';
                     <!-- Work -->
                     <div class="work work-popup-trigger">
                         <div class="work-overlay">
-                            <img class="full-width img-responsive" src="src/img/397x300/01.jpg" alt="Portfolio Image">
+                            <img class="full-width img-responsive" src="demo/img/397x300/01.jpg" alt="Portfolio Image">
                         </div>
                         <div class="work-popup-overlay">
                             <div class="work-popup-content">
@@ -499,7 +519,7 @@ require 'vendor/autoload.php';
                     <!-- Work -->
                     <div class="work work-popup-trigger">
                         <div class="work-overlay">
-                            <img class="full-width img-responsive" src="src/img/397x300/02.jpg" alt="Portfolio Image">
+                            <img class="full-width img-responsive" src="demo/img/397x300/02.jpg" alt="Portfolio Image">
                         </div>
                         <div class="work-popup-overlay">
                             <div class="work-popup-content">
@@ -546,7 +566,7 @@ require 'vendor/autoload.php';
                     <!-- Work -->
                     <div class="work work-popup-trigger">
                         <div class="work-overlay">
-                            <img class="full-width img-responsive" src="src/img/397x300/03.jpg" alt="Portfolio Image">
+                            <img class="full-width img-responsive" src="demo/img/397x300/03.jpg" alt="Portfolio Image">
                         </div>
                         <div class="work-popup-overlay">
                             <div class="work-popup-content">
@@ -798,7 +818,7 @@ require 'vendor/autoload.php';
     <div class="content container">
         <div class="row">
             <div class="col-xs-6">
-                <img class="footer-logo" src="src/img/logo-dark.png" alt="Aitonepage Logo">
+                <img class="footer-logo" src="demo/img/logo-dark.png" alt="Aitonepage Logo">
             </div>
             <div class="col-xs-6 text-right">
                 <p class="margin-b-0"><a class="fweight-700" href="#">Aitonepage</a> Theme Powered by: <a
@@ -816,26 +836,26 @@ require 'vendor/autoload.php';
 
 <!-- JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- CORE PLUGINS -->
-<script src="src/vendor/jquery.min.js" type="text/javascript"></script>
-<script src="src/vendor/jquery-migrate.min.js" type="text/javascript"></script>
-<script src="src/vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="demo/vendor/jquery.min.js" type="text/javascript"></script>
+<script src="demo/vendor/jquery-migrate.min.js" type="text/javascript"></script>
+<script src="demo/vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
 <!-- PAGE LEVEL PLUGINS -->
-<script src="src/vendor/jquery.easing.js" type="text/javascript"></script>
-<script src="src/vendor/jquery.back-to-top.js" type="text/javascript"></script>
-<script src="src/vendor/jquery.smooth-scroll.js" type="text/javascript"></script>
-<script src="src/vendor/jquery.wow.min.js" type="text/javascript"></script>
-<script src="src/vendor/swiper/js/swiper.jquery.min.js" type="text/javascript"></script>
-<script src="src/vendor/masonry/jquery.masonry.pkgd.min.js" type="text/javascript"></script>
-<script src="src/vendor/masonry/imagesloaded.pkgd.min.js" type="text/javascript"></script>
+<script src="demo/vendor/jquery.easing.js" type="text/javascript"></script>
+<script src="demo/vendor/jquery.back-to-top.js" type="text/javascript"></script>
+<script src="demo/vendor/jquery.smooth-scroll.js" type="text/javascript"></script>
+<script src="demo/vendor/jquery.wow.min.js" type="text/javascript"></script>
+<script src="demo/vendor/swiper/js/swiper.jquery.min.js" type="text/javascript"></script>
+<script src="demo/vendor/masonry/jquery.masonry.pkgd.min.js" type="text/javascript"></script>
+<script src="demo/vendor/masonry/imagesloaded.pkgd.min.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsXUGTFS09pLVdsYEE9YrO2y4IAncAO2U"></script>
 
 <!-- PAGE LEVEL SCRIPTS -->
-<script src="src/js/layout.min.js" type="text/javascript"></script>
-<script src="src/js/components/wow.min.js" type="text/javascript"></script>
-<script src="src/js/components/swiper.min.js" type="text/javascript"></script>
-<script src="src/js/components/masonry.min.js" type="text/javascript"></script>
-<script src="src/js/components/google-map.min.js" type="text/javascript"></script>
+<script src="demo/js/layout.min.js" type="text/javascript"></script>
+<script src="demo/js/components/wow.min.js" type="text/javascript"></script>
+<script src="demo/js/components/swiper.min.js" type="text/javascript"></script>
+<script src="demo/js/components/masonry.min.js" type="text/javascript"></script>
+<script src="demo/js/components/google-map.min.js" type="text/javascript"></script>
 
 </body>
 <!-- END BODY -->

@@ -95,11 +95,11 @@ class Predicate
 
                 $a = is_array($valueC) ? is_array($valueC) : $valueC;
 
-                $this->result = call_user_func_array([$this, $callback], [$a, $b]);
+                $result = call_user_func_array([$this, $callback], [$a, $b]);
 
-                if ($callback == "is_true" && $this->result === true) $this->parentPredicate = true;
+                if ($callback == "is_true" && $result === true) $this->parentPredicate = true;
 
-                if ($this->result == true && $this->parentPredicate == true) {
+                if ($result == true && $this->parentPredicate == true) {
 
                     if ($key !== 0) {
                         $this->activeKeys[] = $key;
@@ -113,6 +113,7 @@ class Predicate
     public function evaluatePredicate($context, $config)
     {
         $cntxt = $this->getKeyFromValeuContext($context);
+
 
         if (is_array($config)) {
 
@@ -130,9 +131,28 @@ class Predicate
 
                         $combinator = $value['_predicate']['combinator'];
 
-                        $this->getContextKey($cntxt, $key, $field, $callback, $b);
+                        foreach ($cntxt as $keyC => $valueC) {
 
-                        if ( $combinator == "and" && $this->result == true && $this->parentPredicate == true) {
+                            $this->extra_key = $keyC == "extra_key" ? true : false;
+
+                            if ($keyC == $field && $this->extra_key == false) {
+
+                                $a = is_array($valueC) ? is_array($valueC) : $valueC;
+
+                                $result = call_user_func_array([$this, $callback], [$a, $b]);
+
+                                if ($callback == "is_true" && $result === true) $this->parentPredicate = true;
+
+                                if ($result == true && $this->parentPredicate == true) {
+
+                                    if ($key !== 0) {
+                                        $this->activeKeys[] = $key;
+                                    }
+                                }
+                            }
+                        }
+
+                        if ( $combinator == "and" && isset($result) && $result == true && $this->parentPredicate == true) {
 
                             foreach ($value as $k => $val) {
 

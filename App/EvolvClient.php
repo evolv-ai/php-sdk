@@ -60,11 +60,8 @@ class EvolvClient extends Store
 
     public function initialize($environment, $uid, $endpoint, $remoteContext, $localContext)
     {
-       // $options = Options::buildOptions($options);
 
-       // $options = Options::Parse($options);
-
-        $this->pull($environment,$uid,$endpoint);
+        $this->pull($environment, $uid, $endpoint);
 
 
         if ($this->initialized == true) {
@@ -91,27 +88,13 @@ class EvolvClient extends Store
     public function set($key, $value, $local)
     {
 
-        $result = Context::set($key, $value, $local);
+         Context::set($key, $value, $local);
 
-        $this->remoteContext();
-
-        $this->localContext();
+        $this->listener();
 
     }
 
-    public function localContext(){
-
-        return Context::locContext();
-
-    }
-
-    public function remoteContext(){
-
-        return Context::remContext();
-
-    }
-
-    public function __construct($environment,$uid,$endpoint)
+    public function __construct($environment, $uid, $endpoint)
     {
 
         $this->context = new Context();
@@ -121,15 +104,15 @@ class EvolvClient extends Store
 
         Context::initialize($uid, $this->remoteContext, $this->localContext);
 
-      //  $this->remoteContext = Context::$remoteContext;
+        //  $this->remoteContext = Context::$remoteContext;
 
-     //  $this->localContext = Context::$localContext;
+        //  $this->localContext = Context::$localContext;
 
-     //   $this->print_r($this->localContext);
+        //   $this->print_r($this->localContext);
 
-     //   $store->initialized($this->context, $options);
+        //   $store->initialized($this->context, $options);
 
-      //  $store->pull($options);
+        //  $store->pull($options);
 
 
     }

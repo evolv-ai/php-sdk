@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   php-apache-environment:
-    container_name: php-sdk
+    container_name: evolv-php-sdk
     image: php:7.4-apache
     volumes:
       - ./:/var/www/html/

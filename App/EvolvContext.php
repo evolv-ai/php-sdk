@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EvolvContext;
 
 use  App\EvolvOptions\Options;
+use App\EvolvStore\Store;
 
 require_once __DIR__ . '/EvolvOptions.php';
 
@@ -166,8 +167,9 @@ class Context
 
         }
 
-
     }
+
+
 
     public static function locContext()
     {
@@ -195,6 +197,13 @@ class Context
         }
 
         $context->initialized = true;
+    }
+
+
+
+    public function __construct()
+    {
+
     }
 
 

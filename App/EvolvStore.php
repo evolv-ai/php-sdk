@@ -31,6 +31,11 @@ class Store
     public $allocations = null;
     public $config = null;
     public $current = [];
+    private $subscriptions = [];
+    public $keys;
+    protected $events;
+    public $value;
+    public $local;
 
     public function pull($environment, $uid, $endpoint)
     {
@@ -72,15 +77,36 @@ class Store
 
         $configKeyStates = $this->configKeyStates;
 
-        // $predicates = $predicate->getPredicate($configKeyStates);
+        $context = Context::locContext();
 
-        $context = $this->localContext();
+        $this->keys = $predicate->evaluate($context, $configKeyStates);
 
-        $keys = $predicate->evaluate($context, $configKeyStates);
-        // $keys = $predicate->getPredicate($context, $configKeyStates);
-
-        return $keys;
+        return $this->keys;
     }
+
+    public function listener()
+    {
+
+        $result = call_user_func([$this, 'getActiveKeys']);
+
+        return $result;
+
+    }
+
+    public function get($var = null)
+    {
+
+     $keys = $this->listener();
+
+     if(in_array($var, $keys)){
+         echo "++";
+     }
+     else{
+         echo "--";
+     }
+
+    }
+
 
     public function localContext()
     {
@@ -137,11 +163,6 @@ class Store
 
     }
 
-/*    function createRequestSubscribablePromise($source, $transform, $key)
-    {
-        $resolve = null;
-        $reject = null;
-    }*/
 
 }
 
