@@ -140,18 +140,9 @@ require 'vendor/autoload.php';
 
                         });
 
-                        $client->get("home.cta_text", function ($value) {
-
-                            echo "<pre>";
-
-                            print_r($value);
-
-                            echo "</pre>";
-
-                        });
 
 
-                        $client->getActiveKeys(function ($keys) {
+                    /*    $client->getActiveKeys(function ($keys) {
 
                             echo "<pre>";
 
@@ -159,12 +150,13 @@ require 'vendor/autoload.php';
 
                             echo "</pre>";
 
-                        });
+                        });*/
 
                         $client->set("native.pageCategory", 'home', true);
-                        // $client->set("native.pageCategory", 'pdp', true);
-                        //  $key = $client->getActiveKeys();
-                        // print_r($key);
+                       // $client->set("native.pageCategory", 'pdp', true);
+                        //$key = $client->getActiveKeys();
+                        //$array = $client->localContext();
+                        //$client->print_r($array);
                         ?>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut

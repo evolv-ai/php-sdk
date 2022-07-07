@@ -137,7 +137,6 @@ class EvolvClient extends Store
 
         $this->value = parent::get($key);
 
-
         return $this->value[$key];
     }
 

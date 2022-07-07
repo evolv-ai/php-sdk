@@ -214,7 +214,7 @@ class Predicate
 
     }
 
-    public function getValue($prev, $context)
+    public function getValue($prev, $next, $context)
     {
         if (is_array($context)) {
 
@@ -224,19 +224,24 @@ class Predicate
 
                     if ($k === $prev && is_array($context[$prev])) {
 
-                        $this->result = $context[$prev];
+                        if (!empty($next)) {
 
-                        foreach ($context[$prev] as  $value) {
+                            $this->result = $context[$prev];
 
+                            foreach ($context[$prev] as $key => $value) {
+
+                                $this->result = $value;
+                            }
+                        } else {
                             $this->result = $value;
                         }
 
                     }
-
-                    $this->getValue($prev, $value);
+                    $this->getValue($prev, $next, $value);
 
                 }
             }
+
         }
         return $this->result;
     }
@@ -249,20 +254,25 @@ class Predicate
             return false;
 
         }
+        if (substr($key, 0, strpos($key, "."))) {
 
-        $prevToken = substr($key, 0, strpos($key, "."));
+            $prevToken = substr($key, 0, strpos($key, "."));
 
-        if ($prevToken == false) {
+        } else {
 
             $prevToken = $key;
+
         }
+
+        $nextToken = substr(strrchr($key, "."), 1);
+
         if (empty($key)) {
 
             echo 'Invalid variant key: ' . $key;
 
         } else {
 
-            return $this->getValue($prevToken, $context);
+            return $this->getValue($prevToken, $nextToken, $context);
 
         }
 
