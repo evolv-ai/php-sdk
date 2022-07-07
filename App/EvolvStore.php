@@ -31,11 +31,10 @@ class Store
     public $allocations = null;
     public $config = null;
     public $current = [];
-    private $subscriptions = [];
     public $keys;
-    protected $events;
     public $value;
     public $local;
+    public $get = [];
 
     public function pull($environment, $uid, $endpoint)
     {
@@ -46,7 +45,7 @@ class Store
 
         $arr_location = $httpClient->request($allocationUrl);
         $arr_config = $httpClient->request($configUrl);
-
+        $arr_location = json_decode($arr_location, true);
         $arr_config = json_decode($arr_config, true);
 
         $this->genomeKeyStates = [
@@ -61,7 +60,7 @@ class Store
             'experiments' => [],
         ];
 
-        array_push($this->genomeKeyStates['experiments'], $arr_config);
+        array_push($this->genomeKeyStates['experiments'], $arr_location);
 
         foreach ($arr_config['_experiments'] as $key => $v) {
 
@@ -77,34 +76,38 @@ class Store
 
         $configKeyStates = $this->configKeyStates;
 
-        $context = Context::locContext();
+        $context = $this->localContext();
 
         $this->keys = $predicate->evaluate($context, $configKeyStates);
 
         return $this->keys;
     }
 
-    public function listener()
+    public function get($key)
     {
 
-        $result = call_user_func([$this, 'getActiveKeys']);
+        $config = $this->genomeKeyStates;
 
-        return $result;
+        $predicate = new Predicate();
+
+        $this->value = $predicate->valueFromKey($key, $config);
+
+        $this->get[$key] = $this->value;
+
+        return $this->get;
 
     }
 
-    public function get($var = null)
+    function getConfig($key)
     {
 
-     $keys = $this->listener();
+        $config = $this->configKeyStates;
 
-     if(in_array($var, $keys)){
-         echo "++";
-     }
-     else{
-         echo "--";
-     }
+        $predicate = new Predicate();
 
+        $this->value = $predicate->valueFromKey($key, $config);
+
+        return $this->value;
     }
 
 

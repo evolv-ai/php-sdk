@@ -122,17 +122,7 @@ require 'vendor/autoload.php';
                         $endpoint = 'https://participants.evolv.ai/v1';
                         $client = new EvolvClient($environment, $uid, $endpoint);
                         $client->initialize($environment, $uid, $endpoint, $remoteContext = [], $localContext = []);
-
-                        // $client->getActiveKeys();
-
-
                         $client->set("native.newUser", true, true);
-                        //$client->set("native.pageCategory", 'home', true);
-                        $client->set("native.pageCategory", 'pdp', true);
-                        //  $client->set("extra_key", 'pdp', true);
-
-                        //  $client->print_r($client->localContext());
-
                         ?>
                     </div>
                 </div>
@@ -140,27 +130,41 @@ require 'vendor/autoload.php';
                     <div class="margin-t-50 margin-b-30">
 
                         <?php
+                        $client->get("pdp.page_layout", function ($value) {
+
+                            echo "<pre>";
+
+                            print_r($value);
+
+                            echo "</pre>";
+
+                        });
+
+                        $client->get("home.cta_text", function ($value) {
+
+                            echo "<pre>";
+
+                            print_r($value);
+
+                            echo "</pre>";
+
+                        });
+
+
+                        $client->getActiveKeys(function ($keys) {
+
+                            echo "<pre>";
+
+                            print_r($keys);
+
+                            echo "</pre>";
+
+                        });
 
                         $client->set("native.pageCategory", 'home', true);
-
-                        $key = $client->listener();
-
-                        if (in_array('home', $key)) {
-
-                            echo "<h2>Why Choose Us?</h2>";
-
-                        } elseif (in_array('pdp', $key)) {
-
-                            echo "<h2>Helo world</h2>";
-
-                        } else {
-
-                            echo "<h2>Default title!</h2>";
-                        }
-
-                        $client->set("native.pageCategory", 'home', true);
-
-                        $client->get("home.cta_text");
+                        // $client->set("native.pageCategory", 'pdp', true);
+                        //  $key = $client->getActiveKeys();
+                        // print_r($key);
                         ?>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut

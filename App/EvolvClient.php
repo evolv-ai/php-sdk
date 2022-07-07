@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EvolvClient;
 
+use App\EvolvPredicate\Predicate;
 use  App\EvolvStore\Store;
 use  App\EvolvContext\Context;
 use  App\EvolvOptions\Options;
@@ -24,6 +25,8 @@ class EvolvClient extends Store
     public $beaconOptions = [];
     public $remoteContext;
     public $localContext;
+    public $liseners = [];
+    public $get_liseners = [];
 
 
     public function setOptions($options)
@@ -88,9 +91,60 @@ class EvolvClient extends Store
     public function set($key, $value, $local)
     {
 
-         Context::set($key, $value, $local);
+        Context::set($key, $value, $local);
 
-        $this->listener();
+        $result = $this->getActiveKeys();
+
+        foreach ($this->liseners as $listener) {
+
+            $listener($result);
+
+        }
+
+        foreach ($this->get_liseners as $key => $listener) {
+
+            if (in_array($key, $result)){
+
+                $listener($this->value[$key]);
+
+            }
+
+        }
+
+
+    }
+
+    public function getActiveKeys($lisener = null)
+    {
+        if (isset($lisener)) {
+
+            $this->liseners[] = $lisener;
+
+        }
+
+        return parent::getActiveKeys();
+    }
+
+    public function get($key, $lisener = null)
+    {
+
+        if (isset($lisener)) {
+
+
+            $this->get_liseners[$key] = $lisener;
+
+        }
+
+        $this->value = parent::get($key);
+
+
+        return $this->value[$key];
+    }
+
+    function getConfig($key, $lisener = null)
+    {
+
+        return parent::getConfig($key);
 
     }
 

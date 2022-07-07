@@ -152,7 +152,7 @@ class Predicate
                             }
                         }
 
-                        if ( $combinator == "and" && isset($result) && $result == true && $this->parentPredicate == true) {
+                        if ($combinator == "and" && isset($result) && $result == true && $this->parentPredicate == true) {
 
                             foreach ($value as $k => $val) {
 
@@ -164,13 +164,12 @@ class Predicate
 
                                     $field = $val['_predicate']['rules'][0]['field'];
 
-                                    $callback  = $val['_predicate']['rules'][0]['operator'];
+                                    $callback = $val['_predicate']['rules'][0]['operator'];
 
                                     if ($field == 'extra_key' && $this->extra_key == false) {
 
                                         $this->activeKeys[] = $key . "." . $k;
-                                    }
-                                    else{
+                                    } else {
                                         $this->getContextKey($cntxt, $k, $field, $callback, $b);
                                     }
 
@@ -215,7 +214,34 @@ class Predicate
 
     }
 
-    public function valueFromKey($context, $key)
+    public function getValue($prev, $context)
+    {
+        if (is_array($context)) {
+
+            foreach ($context as $k => $value) {
+
+                if (is_array($value)) {
+
+                    if ($k === $prev && is_array($context[$prev])) {
+
+                        $this->result = $context[$prev];
+
+                        foreach ($context[$prev] as  $value) {
+
+                            $this->result = $value;
+                        }
+
+                    }
+
+                    $this->getValue($prev, $value);
+
+                }
+            }
+        }
+        return $this->result;
+    }
+
+    public function valueFromKey($key, $context)
     {
 
         if (isset($context) == false) {
@@ -223,21 +249,23 @@ class Predicate
             return false;
 
         }
-        $nextToken = substr($key, ".");
 
-        if ($nextToken === 0) {
+        $prevToken = substr($key, 0, strpos($key, "."));
+
+        if ($prevToken == false) {
+
+            $prevToken = $key;
+        }
+        if (empty($key)) {
 
             echo 'Invalid variant key: ' . $key;
 
-        }
+        } else {
 
-        if ($nextToken === -1) {
-
-            return array_key_exists($key, $context) ? $context[$key] : false;
+            return $this->getValue($prevToken, $context);
 
         }
 
-        return valueFromKey(substr($key, 0, $nextToken), substr($key, 0, $nextToken + 1));
     }
 
     public function getKeyFromValeuContext($context)

@@ -199,8 +199,6 @@ class Context
         $context->initialized = true;
     }
 
-
-
     public function __construct()
     {
 
