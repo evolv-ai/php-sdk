@@ -121,7 +121,13 @@ class Context
 
                 $arr = array_diff($array, [$key]);
 
-                $key_v = implode("",$arr);
+                $key_v = implode("", $arr);
+
+                if (array_key_exists($key_v, self::$result[$key]) == true) {
+
+                    unset(self::$result[$key][$key_v]);
+
+                };
 
                 self::$result[$key] += [$key_v => $value];
 

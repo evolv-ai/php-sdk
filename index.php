@@ -122,7 +122,7 @@ require 'vendor/autoload.php';
                         $endpoint = 'https://participants.evolv.ai/v1';
                         $client = new EvolvClient($environment, $uid, $endpoint);
                         $client->initialize($environment, $uid, $endpoint, $remoteContext = [], $localContext = []);
-                        $client->set("native.newUser", true, true);
+                        $client->set("native.newUser", true, false);
                         ?>
                     </div>
                 </div>
@@ -130,7 +130,16 @@ require 'vendor/autoload.php';
                     <div class="margin-t-50 margin-b-30">
 
                         <?php
-                        $client->get("pdp.page_layout", function ($value) {
+                 /*       $client->get("pdp", function ($value) {
+
+                            echo "<pre>";
+
+                            print_r($value);
+
+                            echo "</pre>";
+
+                        });
+                        $client->get("home.cta_text", function ($value) {
 
                             echo "<pre>";
 
@@ -142,7 +151,7 @@ require 'vendor/autoload.php';
 
 
 
-                    /*    $client->getActiveKeys(function ($keys) {
+                        $client->getActiveKeys(function ($keys) {
 
                             echo "<pre>";
 
@@ -151,12 +160,17 @@ require 'vendor/autoload.php';
                             echo "</pre>";
 
                         });*/
-                       // $client->set("native.pageCategory", 'pdp', true);
+                        $client->set("native.pageCategory", 'pdp', true);
                         $client->set("native.pageCategory", 'home', true);
+
 
                         $key = $client->getActiveKeys();
                         $array = $client->localContext();
+                        $remote = $client->remoteContext();
+
+                        $client->print_r($key);
                         $client->print_r($array);
+                        $client->print_r($remote);
                         ?>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
