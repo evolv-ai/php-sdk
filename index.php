@@ -151,7 +151,7 @@ require 'vendor/autoload.php';
                             echo "</pre>";
 
                         });*/
-                        $client->set("native.pageCategory", 'pdp', true);
+                       // $client->set("native.pageCategory", 'pdp', true);
                         $client->set("native.pageCategory", 'home', true);
 
                         $key = $client->getActiveKeys();

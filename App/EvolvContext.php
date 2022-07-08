@@ -121,9 +121,9 @@ class Context
 
                 $arr = array_diff($array, [$key]);
 
-                $a = implode("",$arr);
+                $key_v = implode("",$arr);
 
-                self::$result[$key] = $val += [$a => $value];
+                self::$result[$key] += [$key_v => $value];
 
             }
 
