@@ -102,15 +102,30 @@ class Context
 
         $array = array_reverse($array);
 
-        foreach ($array as $key => $val) {
+        if (!is_array(self::$result)) {
 
-            $setval = ($key === 0) ? $value : self::$result;
+            foreach ($array as $key => $val) {
 
-            self::$result = [
+                $setval = ($key === 0) ? $value : self::$result;
 
-                $val => $setval
+                self::$result = [
 
-            ];
+                    $val => $setval
+
+                ];
+
+            }
+        } else {
+
+            foreach (self::$result as $key => $val) {
+
+                $arr = array_diff($array, [$key]);
+
+                $a = implode("",$arr);
+
+                self::$result[$key] = $val += [$a => $value];
+
+            }
 
         }
 
@@ -155,20 +170,19 @@ class Context
 
             case true:
 
-                self::$localContext[] = self::setKeyToValue($key, $value, $local);
+                self::$localContext = self::setKeyToValue($key, $value, $local);
 
                 break;
 
             case false:
 
-                self::$remoteContext[] = self::setKeyToValue($key, $value, $local);
+                self::$remoteContext = self::setKeyToValue($key, $value, $local);
 
                 break;
 
         }
 
     }
-
 
 
     public static function locContext()

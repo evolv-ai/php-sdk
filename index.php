@@ -151,12 +151,12 @@ require 'vendor/autoload.php';
                             echo "</pre>";
 
                         });*/
-
+                        $client->set("native.pageCategory", 'pdp', true);
                         $client->set("native.pageCategory", 'home', true);
-                       // $client->set("native.pageCategory", 'pdp', true);
-                        //$key = $client->getActiveKeys();
-                        //$array = $client->localContext();
-                        //$client->print_r($array);
+
+                        $key = $client->getActiveKeys();
+                        $array = $client->localContext();
+                        $client->print_r($array);
                         ?>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
