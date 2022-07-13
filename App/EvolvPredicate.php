@@ -109,11 +109,35 @@ class Predicate
         }
     }
 
+    public function getKeyFromValeuContext($context)
+    {
+        $cntxt = [];
+
+        if (isset($context) && is_array($context)) {
+
+            foreach ($context as $key => $value) {
+//echo $key;
+                if (is_array($value)) {
+
+                    foreach ($value as $k => $v) {
+                        // echo $k;
+                        $cntxt += [$key . "." . $k => $v];
+                        /*   echo "<pre>";
+                            print_r($cntxt);echo "</pre>";*/
+
+                    }
+                }
+
+
+            }
+        }
+        return $cntxt;
+    }
 
     public function evaluatePredicate($context, $config)
     {
-        $cntxt = $this->getKeyFromValeuContext($context);
 
+        $cntxt = $this->getKeyFromValeuContext($context);
 
         if (is_array($config)) {
 
@@ -181,7 +205,7 @@ class Predicate
                     }
 
                 }
-                $this->evaluatePredicate($context, $value);
+                 $this->evaluatePredicate($context, $value);
             }
         }
         return $this->activeKeys;
@@ -278,38 +302,37 @@ class Predicate
 
     }
 
-    public function getKeyFromValeuContext($context)
+    public function valueFromKeyRevoluate($key, $context)
     {
-        $cntxt = [];
 
-        if (isset($context) && is_array($context)) {
+        if (isset($context) == false) {
 
-            foreach ($context as $key => $value) {
+            return false;
 
-                if (is_array($value)) {
-
-                    foreach ($value as $k => $v) {
-
-                        if (is_array($v)) {
-
-                            foreach ($v as $key => $value) {
-
-                                $cntxt[$k . "." . $key] = $value;
-
-                            }
-                        } elseif (!is_array($v)) {
-                            $cntxt[$k] = $v;
-                        }
-
-                    }
-                }
-
-
-            }
         }
-        return $cntxt;
-    }
+        if (substr($key, 0, strpos($key, "."))) {
 
+            $prevToken = substr($key, 0, strpos($key, "."));
+
+        } else {
+
+            $prevToken = $key;
+
+        }
+
+        $nextToken = substr(strrchr($key, "."), 1);
+
+        if (empty($key)) {
+
+            echo 'Invalid variant key: ' . $key;
+
+        } else {
+
+            return $this->getValue($prevToken, $nextToken, $context);
+
+        }
+
+    }
 
     public
     function item($item)

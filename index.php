@@ -130,46 +130,48 @@ require 'vendor/autoload.php';
                     <div class="margin-t-50 margin-b-30">
 
                         <?php
-                 /*       $client->get("pdp", function ($value) {
+                        /*              $client->get("pdp", function ($value) {
 
-                            echo "<pre>";
+                                          echo "<pre>";
 
-                            print_r($value);
+                                          print_r($value);
 
-                            echo "</pre>";
+                                          echo "</pre>";
 
-                        });
-                        $client->get("home.cta_text", function ($value) {
+                                      });
+                                      $client->get("home.cta_text", function ($value) {
 
-                            echo "<pre>";
+                                          echo "<pre>";
 
-                            print_r($value);
+                                          print_r($value);
 
-                            echo "</pre>";
+                                          echo "</pre>";
 
-                        });
+                                      });*/
 
 
+                        /*      $client->getActiveKeys(function ($keys) {
 
-                        $client->getActiveKeys(function ($keys) {
+                                  echo "<pre>";
 
-                            echo "<pre>";
+                                  print_r($keys);
 
-                            print_r($keys);
+                                  echo "</pre>";
 
-                            echo "</pre>";
+                              });*/
+                        //    $client->set("native.pageCategory", 'pdp', false);
 
-                        });*/
-                        $client->set("native.pageCategory", 'pdp', true);
-                        $client->set("native.pageCategory", 'home', true);
+                        $client->set("native.pageCategory", 'pdp', false);
 
 
                         $key = $client->getActiveKeys();
-                        $array = $client->localContext();
+
+                        $client->emit("click","params");
+
+                        $client->emit("set","123",true);
+
                         $remote = $client->remoteContext();
 
-                        $client->print_r($key);
-                        $client->print_r($array);
                         $client->print_r($remote);
                         ?>
 
@@ -177,7 +179,7 @@ require 'vendor/autoload.php';
                             labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                             laboris nisi ut aliquip ex ea commodo consequat.</p>
                     </div>
-                    <a href="#" class="btn-theme btn-theme-sm btn-white-bg text-uppercase">Explore</a>
+                    <a href="#"  class="btn-theme btn-theme-sm btn-white-bg text-uppercase">Explore</a>
                 </div>
                 <div class="col-md-5 col-sm-7 col-md-offset-2">
                     <!-- Accordion -->

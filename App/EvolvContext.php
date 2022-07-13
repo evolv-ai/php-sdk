@@ -24,6 +24,7 @@ class Context
     public static $remoteContext;
     public static $localContext;
     public static $result;
+    public static $events;
 
     /**
      * A unique identifier for the participant.
@@ -190,20 +191,15 @@ class Context
 
     }
 
-
-    public static function locContext()
+    public static function pushToArray($data, $time, $context)
     {
+        self::$events = ['events' => $data];
 
-        return self::$localContext;
+        $context +=  self::$events;
 
+        return  $context;
     }
 
-    public static function remContext()
-    {
-
-        return self::$remoteContext;
-
-    }
 
 
     public static function initialize($uid, $remoteContext, $localContext)

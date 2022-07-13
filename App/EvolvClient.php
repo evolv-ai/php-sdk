@@ -8,10 +8,10 @@ use App\EvolvPredicate\Predicate;
 use  App\EvolvStore\Store;
 use  App\EvolvContext\Context;
 use  App\EvolvOptions\Options;
-
+use  App\EvolvBeacon\Beacon;
 require 'vendor/autoload.php';
 require_once __DIR__ . '/EvolvStore.php';
-
+require_once __DIR__ . '/EvolvBeacon.php';
 ini_set('display_errors', 'on');
 
 class EvolvClient extends Store
@@ -63,6 +63,12 @@ class EvolvClient extends Store
 
     public function initialize($environment, $uid, $endpoint, $remoteContext, $localContext)
     {
+
+        $this->endpoint = $endpoint;
+
+        $this->environment = $environment;
+
+        $this->uid = $uid;
 
         $this->pull($environment, $uid, $endpoint);
 
@@ -153,8 +159,6 @@ class EvolvClient extends Store
         $this->context = new Context();
 
         $store = new Store();
-
-
         Context::initialize($uid, $this->remoteContext, $this->localContext);
 
         //  $this->remoteContext = Context::$remoteContext;
