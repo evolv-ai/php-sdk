@@ -59,9 +59,13 @@ class Context
     {
 
         if ($this->initialized == false) {
+
             echo 'Evolv: The evolv context is not initialized';
+
         } else if ($this->initialized == true) {
+
             echo "Evolv: The evolv context is initialized";
+
         }
     }
 
@@ -191,15 +195,41 @@ class Context
 
     }
 
-    public static function pushToArray($data, $time, $context)
+    public static function pushToArray($data, $context, $local)
     {
-        self::$events = ['events' => $data];
+        // echo $local;
 
-        $context +=  self::$events;
+        if (empty($context) && !is_array($context)) {
 
-        return  $context;
+            $context = [];
+
+        }
+
+        if ($local == true) {
+
+            foreach ($data as $key => $value) {
+
+                foreach ($value as $k => $item) {
+
+                    if ($k == "type" || $k == "timestamp") {
+                        unset($data[$key][$k]);
+                    }
+
+                }
+            }
+
+            self::$events = ['events' => $data];
+
+        } else {
+
+            self::$events = ['events' => $data];
+
+        }
+
+        $context += self::$events;
+
+        return $context;
     }
-
 
 
     public static function initialize($uid, $remoteContext, $localContext)

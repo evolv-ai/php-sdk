@@ -37,9 +37,10 @@ class Store
     public $value;
     public $local;
     public $get = [];
-    private $eventBeacon;
     public $remoteContext;
+    public $localContext;
     public $data;
+    public $flesh_data = [];
 
 
     public function pull($environment, $uid, $endpoint)
@@ -119,8 +120,15 @@ class Store
 
     public function localContext()
     {
+        $this->localContext = Context::$localContext;
 
-        return Context::$localContext;
+        if (is_array($this->data) && !empty($this->data)) {
+
+            $this->localContext = Context::pushToArray($this->data, $this->localContext, true);
+
+        }
+
+        return $this->localContext;
 
     }
 
@@ -131,12 +139,12 @@ class Store
 
         $this->remoteContext = $this->reevaluateContext($this->remoteContext);
 
-        if(is_array($this->data) && !empty($this->data)) {
+        if (is_array($this->data) && !empty($this->data)) {
 
-            $this->remoteContext = Context::pushToArray($this->data, $time = time() * 1000, $this->remoteContext);
+            $this->remoteContext = Context::pushToArray($this->data, $this->remoteContext, false);
 
         }
-        return    $this->remoteContext ;
+        return $this->remoteContext;
 
     }
 
@@ -234,6 +242,12 @@ class Store
 
         $revoluate['keys']['active'] += $keys;
 
+        if (empty($context) && !is_array($context)) {
+
+            return false;
+
+        }
+
         foreach ($keys as $key => $val) {
 
             $value = $predicate->valueFromKeyRevoluate($val, $this->genomeKeyStates);
@@ -269,7 +283,7 @@ class Store
 
     }
 
-    public function emit($type, $data, $boolean = true)
+    public function emit($type, $data, $flash = false)
     {
 
         $environment = $this->environment;
@@ -282,26 +296,23 @@ class Store
             'type' => $type,
             'metadata' => $data,
             'uid' => $uid,
-            'boolean' => $boolean,
+            'boolean' => $flash,
             'time' => time() * 1000,
         ];
 
         $this->data[] = [
             'type' => $type,
-            'metadata' => $data,
-            'uid' => $uid,
-            'boolean' => $boolean,
-            'time' => time() * 1000,
+            'timestamp' => time() * 1000,
+            $type => $flash,
         ];
+        if($flash == false) {
 
-
-       // $this->remoteContext = Context::pushToArray($this->data, $time = time() * 1000, $this->remoteContext());
-
-       // $this->print_r($this->remoteContext);
+            $this->flesh_data[] = $data;
+        }
 
         $beacon = new Beacon();
 
-        $beacon->emit($environment, $uid, $endpoint, $data);
+        $beacon->emit($environment, $endpoint, $data, $this->flesh_data,  $flash);
 
     }
 

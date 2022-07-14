@@ -122,15 +122,37 @@ require 'vendor/autoload.php';
                         $endpoint = 'https://participants.evolv.ai/v1';
                         $client = new EvolvClient($environment, $uid, $endpoint);
                         $client->initialize($environment, $uid, $endpoint, $remoteContext = [], $localContext = []);
-                        $client->set("native.newUser", true, false);
+                        $client->set("native.newUser", true, true);
+                        $client->set("native.pageCategory", 'pdp', true);
+                        $client->set("native.pageCategory", 'home', true);
                         ?>
                     </div>
                 </div>
                 <div class="col-md-5 col-sm-5 md-margin-b-60">
                     <div class="margin-t-50 margin-b-30">
+                       <!-- <a href="javascript:void(0)"  onclick="document.write();" class="btn-theme btn-theme-sm btn-white-bg text-uppercase" id="elem2">Explore</a>-->
 
+        <!--                <script>
+                            class Button {
+                                handleEvent(event) {
+                                    switch(event.type) {
+                                        case 'click':
+                                            elem2.innerHTML = <?php /* $client->emit("click","123123",false);*/?>;
+                                            break;
+                                        case 'mouseup':
+
+                                            break;
+                                    }
+                                }
+                            }
+
+                            let button = new  Button();
+                            elem2.addEventListener('click', button);
+
+                        </script>
+-->
                         <?php
-                        /*              $client->get("pdp", function ($value) {
+                            /*         $client->get("pdp", function ($value) {
 
                                           echo "<pre>";
 
@@ -150,7 +172,7 @@ require 'vendor/autoload.php';
                                       });*/
 
 
-                        /*      $client->getActiveKeys(function ($keys) {
+                     /*         $client->getActiveKeys(function ($keys) {
 
                                   echo "<pre>";
 
@@ -159,18 +181,21 @@ require 'vendor/autoload.php';
                                   echo "</pre>";
 
                               });*/
-                        //    $client->set("native.pageCategory", 'pdp', false);
-
-                        $client->set("native.pageCategory", 'pdp', false);
 
 
                         $key = $client->getActiveKeys();
 
-                        $client->emit("click","params");
+                        $client->emit("click","123123",false);
 
-                        $client->emit("set","123",true);
+                        $client->emit("return","push",false);
+
+                        $client->emit("redirect","123",false);
+
+                        $client->emit("scroll","123",true);
 
                         $remote = $client->remoteContext();
+
+                        $local = $client->localContext();
 
                         $client->print_r($remote);
                         ?>
@@ -179,7 +204,7 @@ require 'vendor/autoload.php';
                             labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                             laboris nisi ut aliquip ex ea commodo consequat.</p>
                     </div>
-                    <a href="#"  class="btn-theme btn-theme-sm btn-white-bg text-uppercase">Explore</a>
+                    <a href="#"  onclick="document.write('<?php $client->emit("click","params",false); ?>');" class="btn-theme btn-theme-sm btn-white-bg text-uppercase">Explore</a>
                 </div>
                 <div class="col-md-5 col-sm-7 col-md-offset-2">
                     <!-- Accordion -->
