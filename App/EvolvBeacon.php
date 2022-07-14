@@ -14,7 +14,7 @@ class Beacon
     public $endpoint;
     public $environment;
     public $data;
-    private $limit = 50;
+    private $limit = 3;
 
     public function emit($environment, $endpoint, $data, $flesh_data , $flash)
     {
@@ -50,23 +50,29 @@ class Beacon
             'uid' => $data['uid'],
             'metadata' => $data['metadata'],
         ];
+        $data = json_encode($data);
+       // $data = http_build_query($data);
 
         echo "<pre>";
-        print_r($data);
+        print_r( $data);
         echo "</pre>";
 
-        $data = http_build_query($data);
 
         $ch = curl_init();
+        $headers = array(
+            "Accept: application/json",
+            "Content-Type: application/json",
+        );
 
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $data,
             CURLOPT_HEADER => true,
-            CURLOPT_RETURNTRANSFER => true
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $headers
         ]);
-
+       // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($ch);
 
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
@@ -77,10 +83,10 @@ class Beacon
 
         curl_close($ch);
 
-        //echo "<pre>";
-          // print_r($result);
+        echo "<pre>";
+           print_r($result);
         //  print_r($info);
-       // echo "</pre>";
+        echo "</pre>";
     }
 
 }

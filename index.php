@@ -122,17 +122,13 @@ require 'vendor/autoload.php';
                         $endpoint = 'https://participants.evolv.ai/v1';
                         $client = new EvolvClient($environment, $uid, $endpoint);
                         $client->initialize($environment, $uid, $endpoint, $remoteContext = [], $localContext = []);
-                        $client->set("native.newUser", true, true);
-                        $client->set("native.pageCategory", 'pdp', true);
-                        $client->set("native.pageCategory", 'home', true);
+                        $client->set("native.newUser", true, false);
+                        $client->set("native.pageCategory", 'pdp', false);
+                        //$client->set("native.pageCategory", 'home', true);
                         ?>
-                    </div>
-                </div>
-                <div class="col-md-5 col-sm-5 md-margin-b-60">
-                    <div class="margin-t-50 margin-b-30">
-                       <!-- <a href="javascript:void(0)"  onclick="document.write();" class="btn-theme btn-theme-sm btn-white-bg text-uppercase" id="elem2">Explore</a>-->
+                        <!-- <a href="javascript:void(0)"  onclick="document.write();" class="btn-theme btn-theme-sm btn-white-bg text-uppercase" id="elem2">Explore</a>-->
 
-        <!--                <script>
+                        <!--                <script>
                             class Button {
                                 handleEvent(event) {
                                     switch(event.type) {
@@ -152,46 +148,46 @@ require 'vendor/autoload.php';
                         </script>
 -->
                         <?php
-                            /*         $client->get("pdp", function ($value) {
+                        /*         $client->get("pdp", function ($value) {
 
-                                          echo "<pre>";
+                                      echo "<pre>";
 
-                                          print_r($value);
+                                      print_r($value);
 
-                                          echo "</pre>";
+                                      echo "</pre>";
 
-                                      });
-                                      $client->get("home.cta_text", function ($value) {
+                                  });
+                                  $client->get("home.cta_text", function ($value) {
 
-                                          echo "<pre>";
+                                      echo "<pre>";
 
-                                          print_r($value);
+                                      print_r($value);
 
-                                          echo "</pre>";
+                                      echo "</pre>";
 
-                                      });*/
+                                  });*/
 
 
-                     /*         $client->getActiveKeys(function ($keys) {
+                        /*         $client->getActiveKeys(function ($keys) {
 
-                                  echo "<pre>";
+                                     echo "<pre>";
 
-                                  print_r($keys);
+                                     print_r($keys);
 
-                                  echo "</pre>";
+                                     echo "</pre>";
 
-                              });*/
+                                 });*/
 
 
                         $key = $client->getActiveKeys();
 
-                        $client->emit("click","123123",false);
+                        $client->emit("click","open:window",true);
 
-                        $client->emit("return","push",false);
+                     //   $client->emit("return","push",true);
 
-                        $client->emit("redirect","123",false);
+                     //   $client->emit("redirect","url",true);
 
-                        $client->emit("scroll","123",true);
+                      //  $client->emit("scroll","tab#2",true);
 
                         $remote = $client->remoteContext();
 
@@ -199,6 +195,11 @@ require 'vendor/autoload.php';
 
                         $client->print_r($remote);
                         ?>
+
+                    </div>
+                </div>
+                <div class="col-md-5 col-sm-5 md-margin-b-60">
+                    <div class="margin-t-50 margin-b-30">
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco

@@ -198,30 +198,38 @@ class Store
 
         $ret = 0;
 
-        // $converted = iconv('UTF-8', 'UTF-16LE', $string);
-        /*
-                for ($i = 0; $i < iconv_strlen($converted, 'UTF-16LE'); $i++) {
-                  //  echo $converted[$i] . "<br>";
-                    $character = iconv_substr($converted, $i, 1, 'UTF-16LE');
-                    $codeUnits = unpack('v', $character);
+        if (is_array($string)) {
 
-                    foreach ($codeUnits as $codeUnit) {
-                        echo $codeUnit . "<br>";
-                      $ret = (31 * $ret + $codeUnit) >> 0 ;
-                    }
-                }*/
+            $string = json_encode($string);
 
-        /*  for($i=0; $i<$this->JS_StringLength($string); $i++) {
+        }
 
-              $ret = (31 * $ret + $this->JS_charCodeAt($string, $i)) >> 0;
 
-          }*/
+        $converted = iconv('UTF-8', 'UTF-16LE', $string);
 
-        /*    for ($i = 0; $i < strlen($converted); $i += 2) {
-                $codeUnit = ord($converted[$i]) + (ord($converted[$i+1]) << 0);
-                $ret = $codeUnit . PHP_EOL;
-            }*/
-        //echo  $ret;
+        for ($i = 0; $i < iconv_strlen($converted, 'UTF-16LE'); $i++) {
+
+            $character = iconv_substr($converted, $i, 1, 'UTF-16LE');
+
+            $codeUnits = unpack('v', $character);
+
+            foreach ($codeUnits as $codeUnit) {
+
+                $ret = (31 * $ret + $codeUnit) >> 2;
+            }
+        }
+
+ /*       for ($i = 0; $i < $this->JS_StringLength($string); $i++) {
+
+           // $ret = (31 * $ret + $this->JS_charCodeAt($string, $i));
+
+        }
+
+        for ($i = 0; $i < strlen($converted); $i += 2) {
+           // $codeUnit = ord($converted[$i]) + (ord($converted[$i + 1]) << 0);
+            $ret = $codeUnit . PHP_EOL;
+        }*/
+
         return $ret;
     }
 
@@ -252,12 +260,7 @@ class Store
 
             $value = $predicate->valueFromKeyRevoluate($val, $this->genomeKeyStates);
 
-            if (is_array($value)) {
-
-                $vals[] = '';
-            }
-
-            $vals[] = $val . " : " . $this->hashCode($value);
+            $vals[] = $val . ":" . $this->hashCode($value);
         }
         $revoluate['variants']['active'] += $vals;
 
@@ -303,16 +306,16 @@ class Store
         $this->data[] = [
             'type' => $type,
             'timestamp' => time() * 1000,
-            $type => $flash,
+            //$type => $flash,
         ];
-        if($flash == false) {
+        if ($flash == false) {
 
             $this->flesh_data[] = $data;
         }
 
         $beacon = new Beacon();
 
-        $beacon->emit($environment, $endpoint, $data, $this->flesh_data,  $flash);
+        $beacon->emit($environment, $endpoint, $data, $this->flesh_data, $flash);
 
     }
 
