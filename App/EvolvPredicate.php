@@ -6,96 +6,153 @@ require_once __DIR__ . '/EvolvOptions.php';
 
 class Predicate
 {
-    public $predicate = [];
+    private $result;
 
-    public $param = [];
+    private $activeKeys = [];
 
-    public $a = 'a';
+    private $parentPredicate = false;
 
-    public $b = 'b';
+    private $extra_key = false;
 
-    public $res;
+    private $keys = [];
 
-    public $result;
+    private $filter;
 
-    public $activeKeys = [];
-
-    public $parentPredicate = false;
-
-    public $extra_key = false;
-
-    public function exists($a)
-    {
-        $result = (!empty($a) && isset($a)) ? true : false;
-
-        return $result;
-    }
-
-    public function convertSpace($string)
-    {
-        return $string = "true";
-    }
-
-
-    public function greater_than($a, $b)
-    {
-        $result = $a >= $b ? true : false;
-
-        return $result;
-    }
-
-    public function greater_than_or_equal_to($a, $b)
-    {
-        $result = $a >= $b ? true : false;
-
-        return $result;
-    }
-
-    public function is_true($a, $b)
-    {
-        $result = $a === true ? true : false;
-
-        return $result;
-    }
-
-    public function is_false($a)
-    {
-        $result = $a === false ? true : false;
-
-        return $result;
-    }
-
-    public function loose_equal($a, $b)
-    {
-        $result = $a === $b ? true : false;
-
-        return $result;
-    }
-
-
-    function not_exists($a, $b)
+    public function __construct()
     {
 
-        $result = (empty($a)) ? true : false;
+        $this->filter = [
+            'exists' => function ($a, $b) {
+                return $result = (!empty($a) && isset($a)) ? true : false;
+            },
+            'is_true' => function ($a, $b) {
+                return $a === true ? true : false;
+            },
+            'contains' => function ($a, $b) {
+                return $result = in_array($a, $b);
+            },
+            'defined' => function ($a, $b) {
+                return $result = (isset($a) && !empty($a)) ? true : false;
+            },
+            'equal' => function ($a, $b) {
+                return $a === $b;
+            },
+            'convertSpace' => function ($string) {
+                return $string = "true";
+            },
+            'greater_than' => function ($a, $b) {
+                return $result = ($a > $b) ? true : false;
+            },
+            'greater_than_or_equal_to' => function ($a, $b) {
+                return $result = ($a >= $b) ? true : false;
+            },
+            'is_true' => function ($a, $b) {
+                return $result = $a === true ? true : false;
+            },
+            'is_false' => function ($a, $b) {
+                return $result = $a === false ? true : false;
+            },
+            'loose_equal' => function ($a, $b) {
+                return $result = $a === $b ? true : false;
+            },
+            'not_contains' => function ($a, $b) {
+                return $result = !in_array($a, $b);
+            },
+            'not_exists' => function ($a, $b) {
+                return $result = (empty($a)) ? true : false;
+            },
+            'not_defined' => function ($a, $b) {
+                return $result = (isset($a) == false && empty($a)) ? true : false;
+            },
+            'testNotRegexMatch' => function ($value, $pattern) {
+                return $result = !preg_match($value, $pattern, $matches);
+            },
+            'not_equal' => function ($a, $b) {
+                return $result = ($a !== $b) ? true : false;
 
-        return $result;
+            },
+            'not_starts_with' => function ($a, $b) {
+
+                return str_starts_with($a, $b);
+
+            },
+            'starts_with' => function ($a, $b) {
+
+                return str_starts_with($a, $b);
+
+            },
+            'less_than' => function ($a, $b) {
+                return $a < $b;
+            },
+            'less_than_or_equal_to' => function ($a, $b) {
+
+                return $a <= $b;
+
+            },
+            'loose_not_equal' => function ($a, $b) {
+
+                return $a != $b;
+
+            },
+            'kv_equal' => function ($obj, $params) {
+                return $obj[$params[0]] === $params[1];
+            },
+            'kv_not_equal' => function ($obj, $params) {
+                return $obj[$params[0]] !== $params[1];
+            },
+            'regex64_match' => function ($a, $b) {
+
+                $string = base64_decode($b);
+
+                $string = $this->regexFromString($string);
+
+                $result = strcasecmp($a, $string) == 0 ? true : false;
+
+                return $result;
+            }
+
+        ];
     }
 
-    public $keys = [];
+
+    private function regexFromString($string)
+    {
+        if (!str_starts_with($string, '/')) {
+
+            return $string;
+        }
+
+        $split = strripos($string, '/');
+
+        $part = substr($string, 1, $split);
+
+        $part2 = substr($string, 1, $split + 1);
+
+        return $part2;
+
+    }
+
+    private function kv_equal($array, $param)
+    {
+
+        return $array[0] === $param[1];
+
+    }
 
 
-    public function getContextKey($cntxt, $key, $field, $callback, $b)
+    private function getContextKey($cntxt, $key, $field, $callback, $b)
     {
 
         foreach ($cntxt as $keyC => $valueC) {
-
+//print_r($b);
             $this->extra_key = $keyC == "extra_key" ? true : false;
 
             if ($keyC == $field && $this->extra_key == false) {
-
+//echo $keyC . ' == ' .$field;
                 $a = is_array($valueC) ? is_array($valueC) : $valueC;
 
-                $result = call_user_func_array([$this, $callback], [$a, $b]);
+                $result = $this->filter[$callback]($a, $b);
+                // $result = call_user_func_array([$this, $callback], [$a, $b]);
 
                 if ($callback == "is_true" && $result === true) $this->parentPredicate = true;
 
@@ -116,14 +173,12 @@ class Predicate
         if (isset($context) && is_array($context)) {
 
             foreach ($context as $key => $value) {
-//echo $key;
+
                 if (is_array($value)) {
 
                     foreach ($value as $k => $v) {
-                        // echo $k;
+
                         $cntxt += [$key . "." . $k => $v];
-                        /*   echo "<pre>";
-                            print_r($cntxt);echo "</pre>";*/
 
                     }
                 }
@@ -131,6 +186,7 @@ class Predicate
 
             }
         }
+
         return $cntxt;
     }
 
@@ -139,20 +195,20 @@ class Predicate
 
         $cntxt = $this->getKeyFromValeuContext($context);
 
-        if (is_array($config)) {
+        if (is_array($config) || is_object($config)) {
 
             foreach ($config as $key => $value) {
 
                 if (is_array($value) && isset($value["_predicate"])) {
-
+                    //  print_r($value);
                     if (is_array($cntxt) || is_object($cntxt)) {
 
                         $field = $value['_predicate']['rules'][0]['field'];
 
                         $b = $value['_predicate']['rules'][0]['value'];
-
+//echo $b;
                         $callback = $value['_predicate']['rules'][0]['operator'];
-
+//echo $callback;
                         $combinator = $value['_predicate']['combinator'];
 
                         foreach ($cntxt as $keyC => $valueC) {
@@ -163,13 +219,16 @@ class Predicate
 
                                 $a = is_array($valueC) ? is_array($valueC) : $valueC;
 
-                                $result = call_user_func_array([$this, $callback], [$a, $b]);
+                                $result = $this->filter[$callback]($a, $b);
+
+                                //$result = call_user_func_array([$this, $callback], [$a, $b]);
 
                                 if ($callback == "is_true" && $result === true) $this->parentPredicate = true;
 
                                 if ($result == true && $this->parentPredicate == true) {
 
                                     if ($key !== 0) {
+
                                         $this->activeKeys[] = $key;
                                     }
                                 }
@@ -188,13 +247,21 @@ class Predicate
 
                                     $field = $val['_predicate']['rules'][0]['field'];
 
+                                    $b = $val['_predicate']['rules'][0]['value'];
+                                    //print_r($b);
+
                                     $callback = $val['_predicate']['rules'][0]['operator'];
 
-                                    if ($field == 'extra_key' && $this->extra_key == false) {
+                                    if ($field == 'extra_key') {
 
                                         $this->activeKeys[] = $key . "." . $k;
                                     } else {
-                                        $this->getContextKey($cntxt, $k, $field, $callback, $b);
+
+                                        if ($k == $field && $this->extra_key == false) {
+
+                                            $this->getContextKey($cntxt, $k, $field, $callback, $b);
+
+                                        }
                                     }
 
                                 }
@@ -205,37 +272,11 @@ class Predicate
                     }
 
                 }
-                 $this->evaluatePredicate($context, $value);
+                $this->evaluatePredicate($context, $value);
             }
         }
+        // print_r($this->activeKeys);
         return $this->activeKeys;
-    }
-
-
-    public function regexFromString($string)
-    {
-        if (!strpos($string, '/')) {
-
-            return $string;
-        }
-
-        $split = strripos($string, '/');
-
-        $part = substr($string, 1, $split);
-
-        $part2 = substr($string, 1, $split + 1);
-
-        return strcasecmp($part, $part2);
-
-    }
-
-    public function regex64Match($a, $b)
-    {
-
-        $result = decode($a) === true ? true : false;
-
-        return $result;
-
     }
 
     public function getValue($prev, $next, $context)

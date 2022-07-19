@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace App\EvolvBeacon;
 
@@ -18,6 +17,7 @@ class Beacon
 
     public function emit($environment, $endpoint, $data, $flesh_data , $flash)
     {
+        print_r($flash);
 
         if ($flash == true) {
 
@@ -26,12 +26,13 @@ class Beacon
         }
         else {
 
-            if(count($flesh_data) >= $this->limit){
+            if(count($flesh_data)){
 
                 foreach ($flesh_data as $key => $value){
-
+                    print_r($value);
+                    //sleep(10);
                     $this->flush($environment, $endpoint, $value);
-
+                    //sleep(10);
                 }
             }
 
@@ -41,9 +42,10 @@ class Beacon
 
     public function flush($environment, $endpoint, $data)
     {
+
         $url = $endpoint . '/' . $environment . '/events';
 
-        echo $url . "<br>";
+       // echo $url . "<br>";
 
         $data = [
             'type' => $data['type'],
@@ -52,11 +54,6 @@ class Beacon
         ];
         $data = json_encode($data);
        // $data = http_build_query($data);
-
-        echo "<pre>";
-        print_r( $data);
-        echo "</pre>";
-
 
         $ch = curl_init();
         $headers = array(
@@ -70,9 +67,12 @@ class Beacon
             CURLOPT_POSTFIELDS => $data,
             CURLOPT_HEADER => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => $headers
+            CURLOPT_HTTPHEADER => $headers,
+           // CURLOPT_TIMEOUT => 1000,
+           // CURLOPT_CONNECTTIMEOUT => 1000,
+            //CURLOPT_TIMEOUT_MS => 1000
         ]);
-       // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($ch);
 
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
@@ -83,10 +83,11 @@ class Beacon
 
         curl_close($ch);
 
-        echo "<pre>";
+   /*     echo "<pre>";
            print_r($result);
         //  print_r($info);
-        echo "</pre>";
+        echo "</pre>";*/
+
     }
 
 }
