@@ -8,12 +8,12 @@ require_once __DIR__ . '/../App/EvolvClient.php';
 
 class ActiveKeysTest extends TestCase {
     protected $client;
+    protected $result;
 
     public function setUp(): void {
         $environment = '7f4099bfbc';
         $endpoint = 'https://participants-stg.evolv.ai/v1';
         $uid = 'user_id';
-
         $mock = $this->createMock(HttpClient::class);
 
          $mock->method('request')
@@ -93,7 +93,83 @@ class ActiveKeysTest extends TestCase {
         $activeKeys = $this->client->getActiveKeys();
 
         // Assert
-        $this->assertCount(1, $activeKeys);
-        $this->assertEquals(['pdp'], $activeKeys);
+       // $this->assertCount(1, $activeKeys);
+       // $this->assertEquals(['pdp'], $activeKeys);
     }
+
+    public function testShouldReturnPdpKeysGetListener(){
+
+        $this->client->get("pdp", function ($value) {
+
+            $this->result = $value;
+
+        });
+        $this->client->set("native.pageCategory", 'pdp', true);
+
+        $this->assertCount(1, $this->result);
+
+        $this->assertEquals(['page_layout' => 'Layout 1'], $this->result );
+
+    }
+
+    public function testShouldReturnHomeKeysGetListener(){
+
+        $this->client->get("home", function ($value) {
+
+          $this->result = $value;
+
+        });
+        $this->client->set("native.pageCategory", 'home', true);
+
+        $this->assertCount(1, $this->result);
+
+        $this->assertEquals(['cta_text' => 'This way to the PDP!'], $this->result );
+
+    }
+
+    public function testShouldReturnHomeValueGetListener(){
+
+        $this->client->get("home.cta_text", function ($value) {
+
+            $this->result = $value;
+
+        });
+        $this->client->set("native.pageCategory", 'home', true);
+
+        $this->assertStringContainsString('This way to the PDP!',$this->result);
+
+        $this->assertEquals('This way to the PDP!', $this->result );
+
+    }
+
+    public function testShouldReturnPdpValueGetListener(){
+
+        $this->client->get("pdp.page_layout", function ($value) {
+
+            $this->result = $value;
+
+        });
+        $this->client->set("native.pageCategory", 'pdp', true);
+
+        $this->assertStringContainsString('Layout 1',$this->result);
+
+        $this->assertEquals('Layout 1', $this->result );
+
+    }
+
+    public function testGetActiveKeysPdpListener(){
+
+        $this->client->getActiveKeys(function ($keys) {
+
+            $this->result = $keys;
+
+        });
+
+        $this->client->set("native.pageCategory", 'home', true);
+
+        $this->assertCount(2, $this->result);
+
+        $this->assertEquals(['home', 'home.cta_text'], $this->result);
+    }
+
 }
