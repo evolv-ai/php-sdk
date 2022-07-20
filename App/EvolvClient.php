@@ -1,31 +1,72 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\EvolvClient;
 
-use App\EvolvPredicate\Predicate;
+use  App\EvolvPredicate\Predicate;
 use  App\EvolvStore\Store;
 use  App\EvolvContext\Context;
 use  App\EvolvOptions\Options;
 use  App\EvolvBeacon\Beacon;
+
 require 'vendor/autoload.php';
 require_once __DIR__ . '/EvolvStore.php';
 require_once __DIR__ . '/EvolvBeacon.php';
+
 ini_set('display_errors', 'on');
+
+/**
+ * The EvolvClient provides a low level integration with the Evolv participant APIs.
+ *
+ * The client provides asynchronous access to key states, values, contexts, and configurations.
+ *
+ * @constructor
+ */
 
 class EvolvClient extends Store
 {
+    /**
+     * @ignore
+     */
     public $initialized = false;
+    /**
+     * @ignore
+     */
     public $options;
+    /**
+     * @ignore
+     */
     public $store;
+    /**
+     * @ignore
+     */
     public $obj;
+    /**
+     * @ignore
+     */
     public $context;
+    /**
+     * @ignore
+     */
     public $error;
+    /**
+     * @ignore
+     */
     public $beaconOptions = [];
+    /**
+     * @ignore
+     */
     public $remoteContext;
+    /**
+     * @ignore
+     */
     public $localContext;
+    /**
+     * @ignore
+     */
     public $liseners = [];
+    /**
+     * @ignore
+     */
     public $get_liseners = [];
 
 
@@ -53,12 +94,14 @@ class EvolvClient extends Store
     }
 
     /**
+     * This is a summary
      * Initializes the client with required context information.
      *
-     * @param {String} uid A globally unique identifier for the current participant.
-     * @param {String} sid A globally unique session identifier for the current participant.
-     * @param {Object} remoteContext A map of data used for evaluating context predicates and analytics.
-     * @param {Object} localContext A map of data used only for evaluating context predicates.
+     * @param string $environment String.
+     * @param string $uid A globally unique identifier for the current participant.
+     * @param string $endpoint Url.
+     * @param object $remoteContext A map of data used for evaluating context predicates and analytics.
+     * @param object $localContext A map of data used only for evaluating context predicates.
      */
 
     public function initialize($environment, $uid, $endpoint, $remoteContext, $localContext)
@@ -120,6 +163,13 @@ class EvolvClient extends Store
 
     }
 
+    /**
+     * This is a summary
+     * Check all active keys that start with the specified prefix.
+     *
+     * @param string $lisener function for active keys for get and check.
+     *
+     */
     public function getActiveKeys($lisener = null)
     {
         if (isset($lisener)) {
@@ -174,6 +224,9 @@ class EvolvClient extends Store
 
     }
 
+    /**
+     * @ignore
+     */
     public function print_r($arr)
     {
         echo "<pre>";

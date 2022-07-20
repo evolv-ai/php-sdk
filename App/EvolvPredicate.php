@@ -69,30 +69,21 @@ class Predicate
             },
             'not_equal' => function ($a, $b) {
                 return $result = ($a !== $b) ? true : false;
-
             },
             'not_starts_with' => function ($a, $b) {
-
                 return str_starts_with($a, $b);
-
             },
             'starts_with' => function ($a, $b) {
-
                 return str_starts_with($a, $b);
-
             },
             'less_than' => function ($a, $b) {
                 return $a < $b;
             },
             'less_than_or_equal_to' => function ($a, $b) {
-
                 return $a <= $b;
-
             },
             'loose_not_equal' => function ($a, $b) {
-
                 return $a != $b;
-
             },
             'kv_equal' => function ($obj, $params) {
                 return $obj[$params[0]] === $params[1];

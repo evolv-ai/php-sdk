@@ -14,35 +14,107 @@ require_once __DIR__ . '/EvolvPredicate.php';
 
 class Store
 {
-
+    /**
+     * @ignore
+     */
     public $version;
+    /**
+     * @ignore
+     */
     public $prefix;
+    /**
+     * @ignore
+     */
     public $keyId;
+    /**
+     * @ignore
+     */
     public $key;
 
-
+    /**
+     * @ignore
+     */
     public $genomeKeyStates = [];
+    /**
+     * @ignore
+     */
     public $configKeyStates = [];
+    /**
+     * @ignore
+     */
     public $context;
+    /**
+     * @ignore
+     */
     public $clientContext = null;
+    /**
+     * @ignore
+     */
     public $initialized = false;
+    /**
+     * @ignore
+     */
     public $waitingToPull = false;
+    /**
+     * @ignore
+     */
     public $waitingToPullImmediate = true;
+    /**
+     * @ignore
+     */
     public $genomes = [];
+    /**
+     * @ignore
+     */
     public $effectiveGenome = [];
+    /**
+     * @ignore
+     */
     public $allocations = null;
+    /**
+     * @ignore
+     */
     public $config = null;
+    /**
+     * @ignore
+     */
     public $current = [];
+    /**
+     * @ignore
+     */
     public $keys;
+    /**
+     * @ignore
+     */
     public $value;
+    /**
+     * @ignore
+     */
     public $local;
+    /**
+     * @ignore
+     */
     public $get = [];
+    /**
+     * @ignore
+     */
     public $remoteContext;
+    /**
+     * @ignore
+     */
     public $localContext;
+    /**
+     * @ignore
+     */
     public $data;
+    /**
+     * @ignore
+     */
     public $flesh_data = [];
 
-
+    /**
+     * @ignore
+     */
     public function pull($environment, $uid, $endpoint)
     {
         $httpClient = new HttpClient();
@@ -74,7 +146,17 @@ class Store
             array_push($this->configKeyStates['experiments'], $v);
 
         }
+       // $this->print_r($this->configKeyStates['experiments']);
+
     }
+
+    /**
+     * This is a summary
+     * Check all active keys that start with the specified prefix.
+     *
+     * @param string $lisener function for active keys for get and check.
+     *
+     */
 
     public function getActiveKeys()
     {
@@ -84,12 +166,20 @@ class Store
         $configKeyStates = $this->configKeyStates;
 
         $context = $this->localContext();
+        //$this->print_r( $context);
 
         $this->keys = $predicate->evaluate($context, $configKeyStates);
 
         return $this->keys;
     }
 
+    /**
+     * This is a summary
+     * Get the value of a specified key.
+     *
+     * @param string $key The key of the value to retrieve.
+     *
+     */
     public function get($key)
     {
 
@@ -105,6 +195,13 @@ class Store
 
     }
 
+    /**
+     * This is a summary
+     * Get the configuration for a specified key.
+     *
+     * @param string $key The key to retrieve the configuration for.
+     *
+     */
     function getConfig($key)
     {
 
@@ -117,7 +214,9 @@ class Store
         return $this->value;
     }
 
-
+    /**
+     * @ignore
+     */
     public function localContext()
     {
         $this->localContext = Context::$localContext;
@@ -132,12 +231,15 @@ class Store
 
     }
 
+    /**
+     * @ignore
+     */
     public function remoteContext()
     {
 
         $this->remoteContext = Context::$remoteContext;
 
-        $this->remoteContext = $this->reevaluateContext($this->remoteContext);
+        $this->remoteContext = $this->revaluateContext($this->remoteContext);
 
         if (is_array($this->data) && !empty($this->data)) {
 
@@ -148,6 +250,9 @@ class Store
 
     }
 
+    /**
+     * @ignore
+     */
     public function setActiveAndEntryKeyStates()
     {
         /*        $predicate = new Predicate();
@@ -160,6 +265,9 @@ class Store
                 */
     }
 
+    /**
+     * @ignore
+     */
     public function getUTF16CodeUnits($string)
     {
         $string = substr(json_encode($string), 1, -1);
@@ -169,11 +277,17 @@ class Store
         return $matches[0];
     }
 
+    /**
+     * @ignore
+     */
     public function JS_StringLength($string)
     {
         return count($this->getUTF16CodeUnits($string));
     }
 
+    /**
+     * @ignore
+     */
     public function JS_charCodeAt($string, $index)
     {
         $utf16CodeUnits = $this->getUTF16CodeUnits($string);
@@ -192,10 +306,21 @@ class Store
         }
     }
 
+    /**
+     * @ignore
+     */
+    function uniord($u) {
+        $k = mb_convert_encoding($u, 'UCS-2LE', 'UTF-8');
+        $k1 = ord(substr($k, 0, 1));
+        $k2 = ord(substr($k, 1, 1));
+        return $k2 * 256 + $k1;
+    }
 
+    /**
+     * @ignore
+     */
     public function hashCode($string)
     {
-
         $ret = 0;
 
         if (is_array($string)) {
@@ -215,25 +340,28 @@ class Store
 
             foreach ($codeUnits as $codeUnit) {
 
-                $ret = (31 * $ret + $codeUnit) >> 2;
+                $ret = (31 * $ret + $codeUnit) << 2;
             }
         }
 
- /*       for ($i = 0; $i < $this->JS_StringLength($string); $i++) {
+/*        for ($i = 0; $i < $this->JS_StringLength($string); $i++) {
 
-           // $ret = (31 * $ret + $this->JS_charCodeAt($string, $i));
+            $ret = (31 * $ret + $this->JS_charCodeAt($string, $i));
 
         }
 
         for ($i = 0; $i < strlen($converted); $i += 2) {
-           // $codeUnit = ord($converted[$i]) + (ord($converted[$i + 1]) << 0);
+            $codeUnit = ord($converted[$i]) + (ord($converted[$i + 1]) << 0);
             $ret = $codeUnit . PHP_EOL;
         }*/
 
         return $ret;
     }
 
-    public function reevaluateContext($context)
+    /**
+     * Reevaluates the current context.
+     */
+    public function revaluateContext($context)
     {
         $revoluate = [
             'keys' => ['active' => []],
@@ -267,6 +395,9 @@ class Store
         return $revoluate;
     }
 
+    /**
+     * @ignore
+     */
     public function evaluatePredicates($context, $config)
     {
 
@@ -286,6 +417,15 @@ class Store
 
     }
 
+    /**
+     * This is a summary
+     * Send an event to the events endpoint.
+     *
+     * @param string $type The type associated with the event.
+     * @param object $data Any metadata to attach to the event.
+     * @param boolean $flash If true, the event will be sent immediately.
+     *
+     */
     public function emit($type, $data, $flash = false)
     {
 
@@ -319,6 +459,20 @@ class Store
 
     }
 
+    /**
+     * This is a summary
+     * Force all beacons to transmit.
+     *
+     */
+    public function flush()
+    {
+
+
+    }
+
+    /**
+     * @ignore
+     */
     public function print_r($arr)
     {
         echo "<pre>";
@@ -326,6 +480,9 @@ class Store
         echo "</pre>";
     }
 
+    /**
+     * @ignore
+     */
     public function initialized($context, $uid, $endpoint)
     {
 

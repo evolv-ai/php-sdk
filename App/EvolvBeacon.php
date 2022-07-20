@@ -17,7 +17,6 @@ class Beacon
 
     public function emit($environment, $endpoint, $data, $flesh_data , $flash)
     {
-        print_r($flash);
 
         if ($flash == true) {
 
@@ -29,10 +28,9 @@ class Beacon
             if(count($flesh_data)){
 
                 foreach ($flesh_data as $key => $value){
-                    print_r($value);
-                    //sleep(10);
+
                     $this->flush($environment, $endpoint, $value);
-                    //sleep(10);
+
                 }
             }
 
@@ -82,11 +80,6 @@ class Beacon
         $info = curl_getinfo($ch);
 
         curl_close($ch);
-
-   /*     echo "<pre>";
-           print_r($result);
-        //  print_r($info);
-        echo "</pre>";*/
 
     }
 

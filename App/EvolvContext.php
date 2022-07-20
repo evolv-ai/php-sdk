@@ -1,42 +1,92 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\EvolvContext;
 
+//use _HumbugBox7eb78fbcc73e\___PHPSTORM_HELPERS\object;
 use  App\EvolvOptions\Options;
 use App\EvolvStore\Store;
 
 require_once __DIR__ . '/EvolvOptions.php';
 
+/**
+ * The EvolvContext provides functionality to manage data relating to the client state, or context in which the
+ * variants will be applied.
+ *
+ * This data is used for determining which variables are active, and for general analytics.
+ *
+ * @constructor
+ */
 
 class Context
 {
-
+    /**
+     * @ignore
+     */
     public $uid;
+
+    /**
+     * @ignore
+     */
     public $sid;
+
+    /**
+     * @ignore
+     */
     public $initialized = false;
+
+    /**
+     * @ignore
+     */
     public static $current = [];
+
+    /**
+     * @ignore
+     */
     public static $set = [];
+
+    /**
+     * @ignore
+     */
     public static $value;
+
+    /**
+     * @ignore
+     */
     public static $local;
+
+    /**
+     * @ignore
+     */
     public static $context;
+    /**
+     * The context information for evaluation of predicates and analytics.
+     */
     public static $remoteContext;
+    /**
+     * The context information for evaluation of predicates only, and not used for analytics.
+     */
     public static $localContext;
+
+    /**
+     * @ignore
+     */
     public static $result;
+
+    /**
+     * @ignore
+     */
     public static $events;
 
     /**
-     * A unique identifier for the participant.
+     * @ignore
      */
     public function getUid($uid)
     {
         return $this->uid = $uid;
     }
 
-
     /**
-     * The context information for evaluation of predicates and analytics.
+     * @ignore
      */
     public function remoteContext($remoteContext)
     {
@@ -46,7 +96,7 @@ class Context
     }
 
     /**
-     * The context information for evaluation of predicates only, and not used for analytics.
+     * @ignore
      */
     public function localContext($localContext)
     {
@@ -55,6 +105,9 @@ class Context
 
     }
 
+    /**
+     * @ignore
+     */
     public function ensureInitialized()
     {
 
@@ -69,6 +122,9 @@ class Context
         }
     }
 
+    /**
+     * @ignore
+     */
     public static function getValueForKey($key, $local)
     {
 
@@ -98,6 +154,9 @@ class Context
         return self::$value;
     }
 
+    /**
+     * @ignore
+     */
     public static function setKeyToValue($key, $value, $local)
     {
         $key;
@@ -144,6 +203,9 @@ class Context
 
     }
 
+    /**
+     * @ignore
+     */
     public static function arraysEqual($a, $b)
     {
         if (!is_array($a) || !is_array($b)) return false;
@@ -162,15 +224,16 @@ class Context
 
 
     /**
+     * This is a summary
      * Sets a value in the current context.
      *
      * Note: This will cause the effective genome to be recomputed.
      *
-     * @param key {String} The key to associate the value to.
-     * @param value {*} The value to associate with the key.
-     * @param local {Boolean} If true, the value will only be added to the localContext.
+     * @param string $key The key to associate the value to.
+     * @param string $value The value to associate with the key.
+     * @param boolean $local If true, the value will only be added to the localContext.
+     *
      */
-
     public static function set($key, $value, $local)
     {
         $key;
@@ -195,6 +258,9 @@ class Context
 
     }
 
+    /**
+     * @ignore
+     */
     public static function pushToArray($data, $context, $local)
     {
         // echo $local;
@@ -231,7 +297,9 @@ class Context
         return $context;
     }
 
-
+    /**
+     * @ignore
+     */
     public static function initialize($uid, $remoteContext, $localContext)
     {
         $context = new Context();
@@ -244,11 +312,5 @@ class Context
 
         $context->initialized = true;
     }
-
-    public function __construct()
-    {
-
-    }
-
 
 }
