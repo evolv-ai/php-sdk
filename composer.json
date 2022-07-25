@@ -2,7 +2,6 @@
     "name": "evolv/php-sdk",
     "description": "This is the official JavPHP client for the Evolv Technologies optimization platform.",
     "type": "library",
-    "minimum-stability": "stable",
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "phpdocumentor/phpdocumentor":  "v3.1.2",
@@ -19,7 +18,6 @@
             "name": "Evolv"
         }
     ],
-    "require": {},
     "config": {
         "allow-plugins": {
             "symfony/flex": true,
@@ -27,9 +25,8 @@
         }
     },
     "scripts": {
-        "start": "docker ps -q \n docker-compose up -d",
+        "start": "docker-compose up -d \n sensible-browser http://localhost:8000/Example/",
         "test": "./vendor/bin/phpunit",
-        "docs": "./vendor/bin/phpdoc -d ./App  -f ./App/EvolvClient.php -f ./App/EvolvContext.php  -t ./docs/ --title Documentation",
+        "docs": "./vendor/bin/phpdoc -d ./App  -f ./App/EvolvClient.php -f ./App/EvolvContext.php  -t ./docs/ --title Documentation"
     }
-
 }
