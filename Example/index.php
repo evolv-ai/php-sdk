@@ -2,9 +2,8 @@
 
 declare (strict_types=1);
 
-use  App\EvolvClient;
+use  Evolv\EvolvClient;
 
-require_once __DIR__ . '/../App/EvolvClient.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 function display($arr, $title = null)
@@ -123,8 +122,8 @@ function display($arr, $title = null)
             $client->on('contaminated', function() use ($client) {
                 display('CONTAMINATED');
             });
-
-            $client->context->set('native.newUser', true);
+            $client->emit("scroll", "tab#2", true);
+           // $client->context->set('native.newUser', true);
             $client->context->set('native.pageCategory', 'home');
 
           ?>
