@@ -20,12 +20,12 @@
     ],
     "config": {
         "allow-plugins": {
-            "symfony/flex": true,
-            "phpdocumentor/shim": true
+            "symfony/flex": false,
+            "phpdocumentor/shim": false
         }
     },
     "scripts": {
-        "start": "docker-compose up -d \n sensible-browser http://localhost:8000/Example/",
+        "start": "docker-compose up -d",
         "test": "./vendor/bin/phpunit",
         "docs": "./vendor/bin/phpdoc -d ./App  -f ./App/EvolvClient.php -f ./App/EvolvContext.php  -t ./docs/ --title Documentation"
     }
