@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Evolv;
 
-use Evolv\EvolvContext;
-use Evolv\Predicate;
-use Evolv\HttpClient;
-
 use function Evolv\Utils\waitFor;
 use function Evolv\Utils\emit;
 use function Evolv\Utils\flattenKeys;

@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Evolv;
 
+use _HumbugBox7eb78fbcc73e\___PHPSTORM_HELPERS\object;
+use PhpParser\Node\Scalar\DNumber;
 use function Evolv\Utils\getValueForKey;
 use function Evolv\Utils\setKeyToValue;
 use function Evolv\Utils\removeValueForKey;
 use function Evolv\Utils\emit;
 use function Evolv\Utils\flatten;
-require_once __DIR__ . '/Utils/getValueForKey.php';
-require_once __DIR__ . '/Utils/setKeyToValue.php';
-require_once __DIR__ . '/Utils/removeValueForKey.php';
-require_once __DIR__ . '/Utils/waitForIt.php';
-require_once __DIR__ . '/Utils/flatten.php';
-
 
 const CONTEXT_CHANGED = 'context.changed';
 const CONTEXT_INITIALIZED = 'context.initialized';
@@ -32,6 +28,9 @@ class EvolvContext
     public array $localContext = [];
     private bool $initialized = false;
 
+    /**
+     * @ignore
+     */
     private function ensureInitialized(): void
     {
         if (!$this->initialized) {
@@ -47,7 +46,7 @@ class EvolvContext
     }
 
     public function initialize($uid, $remoteContext = [], $localContext = [])
-    {
+    {require_once __DIR__ . '/Utils/waitForIt.php';
         if ($this->initialized) {
             throw new \Exception('Evolv: The context is already initialized');
         }
@@ -65,6 +64,9 @@ class EvolvContext
         emit(CONTEXT_INITIALIZED, $this->resolve());
     }
 
+    /**
+     * @ignore
+     */
     public function __destruct()
     {
         emit(CONTEXT_DESTROYED);
@@ -108,7 +110,7 @@ class EvolvContext
     /**
      * Retrieve a value from the context.
      *
-     * @param {String} key The kay associated with the value to retrieve.
+     * @param string $key The kay associated with the value to retrieve.
      * @returns {*} The value associated with the specified key.
      */
     public function get(string $key)
@@ -128,7 +130,7 @@ class EvolvContext
      *
      * Note: This will cause the effective genome to be recomputed.
      *
-     * @param key {String} The key to remove from the context.
+     * @param  string $key  The key to remove from the context.
      */
     public function remove(string $key)
     {
@@ -151,8 +153,8 @@ class EvolvContext
      *
      * Note: This will cause the effective genome to be recomputed.
      *
-     * @param update {Object} The values to update the context with.
-     * @param local {Boolean} If true, the values will only be added to the localContext.
+     * @param object $update  The values to update the context with.
+     * @param boolean $local If true, the values will only be added to the localContext.
      */
     public function update(array $update, $local = false) {
         $this->ensureInitialized();
@@ -187,8 +189,8 @@ class EvolvContext
     /**
      * Checks if the specified key is currently defined in the context.
      *
-     * @param key The key to check.
-     * @returns {boolean} True if the key has an associated value in the context.
+     * @param $key The key to check.
+     * @returns boolean True if the key has an associated value in the context.
      */
     public function contains(string $key)
     {
@@ -200,11 +202,11 @@ class EvolvContext
     /**
      * Adds value to specified array in context. If array doesnt exist its created and added to.
      *
-     * @param key The array to add to.
-     * @param value Value to add to the array.
-     * @param local {Boolean} If true, the value will only be added to the localContext.
-     * @param limit {Number} Max length of array to maintain.
-     * @returns {boolean} True if value was successfully added.
+     * @param array $key The array to add to.
+     * @param array $value Value to add to the array.
+     * @param boolean $local {Boolean} If true, the value will only be added to the localContext.
+     * @param  DNumber $limit {Number} Max length of array to maintain.
+     * @returns boolean True if value was successfully added.
      */
     public function pushToArray(string $key, $value, $local = false, $limit = null)
     {

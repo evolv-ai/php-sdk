@@ -8,7 +8,7 @@ function ensureScope($it)
 {
     global $scopedHandlers;
 
-    if (array_key_exists($it, $scopedHandlers)) {
+    if (is_array($scopedHandlers) && array_key_exists($it, $scopedHandlers)) {
       return;
     }
   

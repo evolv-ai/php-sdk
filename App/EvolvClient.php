@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Evolv;
 
-use Evolv\EvolvContext;
-use Evolv\EvolvStore;
-use Evolv\Beacon;
-
+use _HumbugBox7eb78fbcc73e\___PHPSTORM_HELPERS\object;
 use function Evolv\Utils\waitFor;
 use function Evolv\Utils\emit;
 
@@ -27,6 +24,12 @@ class EvolvClient
     private Beacon $contextBeacon;
     private Beacon $eventBeacon;
 
+    /**
+     * @param string $environment
+     * @param string $endpoint
+     * @param bool $autoconfirm
+     * @return object
+     */
     public function __construct(string $environment, string $endpoint = 'https://participants.evolv.ai/', bool $autoconfirm = true)
     {
         $this->context = new EvolvContext();
@@ -41,14 +44,14 @@ class EvolvClient
     /**
      * Initializes the client with required context information.
      *
-     * @param {String} uid A globally unique identifier for the current participant.
-     * @param {String} sid A globally unique session identifier for the current participant.
-     * @param {Object} remoteContext A map of data used for evaluating context predicates and analytics.
-     * @param {Object} localContext A map of data used only for evaluating context predicates.
+     * @param string $uid A globally unique identifier for the current participant.
+     * @param object $remoteContext A map of data used for evaluating context predicates and analytics.
+     * @param object $localContext A map of data used only for evaluating context predicates.
+     * @return array
      */
 
     public function initialize(string $uid, array $remoteContext = [], array $localContext = [])
-    {
+    {require_once __DIR__ . '/Utils/waitForIt.php';
         if ($this->initialized) {
             throw new \Exception('Evolv: Client is already initialized');
         }
@@ -110,10 +113,10 @@ class EvolvClient
      * * "contaminated" - Called when the consumer is contaminated (topic)
      * * "event.emitted" - Called when an event is emitted through the beacon (topic, type, score)
      *
-     * @param string topic The event topic on which the listener should be invoked.
-     * @param callable listener The listener to be invoked for the specified topic.
-     * @method
-     * @see {@link EvolvClient#once} for listeners that should only be invoked once.
+     * @param string $topic The event topic on which the listener should be invoked.
+     * @param callable $listener The listener to be invoked for the specified topic.
+     * @function
+     * @see  EvolvClient for listeners that should only be invoked once.
      */
     public function on(string $topic, callable $listener)
     {
@@ -123,9 +126,9 @@ class EvolvClient
     /**
      * Send an event to the events endpoint.
      *
-     * @param {String} type The type associated with the event.
-     * @param metadata {Object} Any metadata to attach to the event.
-     * @param flush {Boolean} If true, the event will be sent immediately.
+     * @param string $type The type associated with the event.
+     * @param object $metadata  Any metadata to attach to the event.
+     * @param boolean $flush If true, the event will be sent immediately.
      */
     public function emit(string $type, $metadata, bool $flush = false)
     {
@@ -140,10 +143,10 @@ class EvolvClient
     /**
      * Check all active keys that start with the specified prefix.
      *
-     * @param {String} prefix The prefix of the keys to check.
+     * @param string $prefix The prefix of the keys to check.
      * @returns {SubscribablePromise.<Object|Error>} A SubscribablePromise that resolves to object
      * describing the state of active keys.
-     * @method
+     * @function
      */
     public function getActiveKeys(string $prefix = '', callable $listener = null)
     {
@@ -153,9 +156,9 @@ class EvolvClient
     /**
      * Get the value of a specified key.
      *
-     * @param {String} key The key of the value to retrieve.
+     * @param string $key The key of the value to retrieve.
      * @returns @mixed A value of the specified key.
-     * @method
+     * @function
      */
     public function get(string $key = '', callable $listener = null)
     {
@@ -224,9 +227,9 @@ class EvolvClient
      * Marks a consumer as unsuccessfully retrieving and / or applying requested values, making them ineligible for
      * inclusion in optimization statistics.
      *
-     * @param details {Object} Optional. Information on the reason for contamination. If provided, the object should
+     * @param  object $details Optional. Information on the reason for contamination. If provided, the object should
      * contain a reason. Optionally, a 'details' value should be included for extra debugging info
-     * @param {boolean} allExperiments If true, the user will be excluded from all optimizations, including optimization
+     * @param boolean $allExperiments If true, the user will be excluded from all optimizations, including optimization
      * not applicable to this page
      */
     public function contaminate($details, bool $allExperiments = false)

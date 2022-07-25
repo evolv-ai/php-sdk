@@ -2,7 +2,6 @@
     "name": "evolv/php-sdk",
     "description": "This is the official JavPHP client for the Evolv Technologies optimization platform.",
     "type": "library",
-    "minimum-stability": "dev",
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "phpdocumentor/phpdocumentor":  "v3.1.2",
@@ -11,7 +10,7 @@
     "license": "GPL-3.0-only",
     "autoload": {
         "psr-4": {
-            "Evolv\\": "App/"
+            "Evolv\\": "./App"
         }
     },
     "authors": [
@@ -22,7 +21,7 @@
     "config": {
         "allow-plugins": {
             "symfony/flex": false,
-            "phpdocumentor/shim": false
+            "phpdocumentor/shim": true
         }
     },
     "scripts": {
