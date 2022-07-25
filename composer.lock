@@ -4,51 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac22c89631a1570fe2ba45da499bcc7a",
-    "packages": [
-        {
-            "name": "sdk-php/evolv-sdk",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/SlyFoxST/test-sdk-ev.git",
-                "reference": "1d2a57e03726d0e3d52b9f4ce2c0e38d155991c2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/SlyFoxST/test-sdk-ev/zipball/1d2a57e03726d0e3d52b9f4ce2c0e38d155991c2",
-                "reference": "1d2a57e03726d0e3d52b9f4ce2c0e38d155991c2",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpdocumentor/phpdocumentor": "v3.1.2",
-                "phpdocumentor/shim": "3.1.2",
-                "phpunit/phpunit": "^9.5"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Evolv\\": "App/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-only"
-            ],
-            "authors": [
-                {
-                    "name": "Evolv"
-                }
-            ],
-            "description": "This is the official JavPHP client for the Evolv Technologies optimization platform.",
-            "support": {
-                "issues": "https://github.com/SlyFoxST/test-sdk-ev/issues",
-                "source": "https://github.com/SlyFoxST/test-sdk-ev/tree/main"
-            },
-            "time": "2022-07-25T18:11:02+00:00"
-        }
-    ],
+    "content-hash": "31310122cd3018f26212e2bc06fb5c47",
+    "packages": [],
     "packages-dev": [
         {
             "name": "doctrine/event-manager",
@@ -6769,9 +6726,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "sdk-php/evolv-sdk": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace Evolv;
 
-use App\EvolvContext;
+use Evolv\EvolvContext;
 
 require __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/EvolvStore.php';

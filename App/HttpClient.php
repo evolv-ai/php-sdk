@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace Evolv;
 
 class HttpClient {
     public function request(string $url)
