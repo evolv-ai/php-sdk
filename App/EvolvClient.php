@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Evolv;
 
-use _HumbugBox7eb78fbcc73e\___PHPSTORM_HELPERS\object;
+
 use function Evolv\Utils\waitFor;
 use function Evolv\Utils\emit;
 
@@ -30,7 +30,7 @@ class EvolvClient
      * @param bool $autoconfirm
      * @return object
      */
-    public function __construct(string $environment, string $endpoint = 'https://participants.evolv.ai/', bool $autoconfirm = true)
+    public function __construct(string $environment, string $endpoint = 'https://participants.evolv.ai/', bool $autoconfirm = true, $llist = false)
     {
         $this->context = new EvolvContext();
         $this->store = new EvolvStore($environment, $endpoint);
@@ -39,6 +39,10 @@ class EvolvClient
         $this->eventBeacon = new Beacon($endpoint . 'v1/' . $environment . '/events', $this->context);
         
         $this->autoconfirm = $autoconfirm;
+
+        if($llist){
+           echo "werwer";
+        }
     }
 
     /**
@@ -51,13 +55,15 @@ class EvolvClient
      */
 
     public function initialize(string $uid, array $remoteContext = [], array $localContext = [])
-    {require_once __DIR__ . '/Utils/waitForIt.php';
+    {
         if ($this->initialized) {
             throw new \Exception('Evolv: Client is already initialized');
+            exit('Evolv: Client is already initialized');
         }
 
         if (!$uid) {
             throw new \Exception('Evolv: "uid" must be specified');
+            exit('Evolv: "uid" must be specified');
         }
 
         $this->context->initialize($uid, $remoteContext, $localContext);

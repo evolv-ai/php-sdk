@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Evolv;
 
-use _HumbugBox7eb78fbcc73e\___PHPSTORM_HELPERS\object;
 use PhpParser\Node\Scalar\DNumber;
 use function Evolv\Utils\getValueForKey;
 use function Evolv\Utils\setKeyToValue;
 use function Evolv\Utils\removeValueForKey;
 use function Evolv\Utils\emit;
 use function Evolv\Utils\flatten;
+
+require_once __DIR__ . '/Utils/flatten.php';
+require_once __DIR__ . '/Utils/getValueForKey.php';
+require_once __DIR__ . '/Utils/setKeyToValue.php';
+require_once __DIR__ . '/Utils/removeValueForKey.php';
 
 const CONTEXT_CHANGED = 'context.changed';
 const CONTEXT_INITIALIZED = 'context.initialized';
@@ -31,6 +35,7 @@ class EvolvContext
     /**
      * @ignore
      */
+
     private function ensureInitialized(): void
     {
         if (!$this->initialized) {
@@ -46,7 +51,7 @@ class EvolvContext
     }
 
     public function initialize($uid, $remoteContext = [], $localContext = [])
-    {require_once __DIR__ . '/Utils/waitForIt.php';
+    {
         if ($this->initialized) {
             throw new \Exception('Evolv: The context is already initialized');
         }
@@ -64,9 +69,6 @@ class EvolvContext
         emit(CONTEXT_INITIALIZED, $this->resolve());
     }
 
-    /**
-     * @ignore
-     */
     public function __destruct()
     {
         emit(CONTEXT_DESTROYED);
