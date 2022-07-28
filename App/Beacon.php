@@ -29,8 +29,6 @@ class Beacon {
 
         $data = json_encode($payload);
 
-        echo $this->endpoint;
-
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_URL, $this->endpoint);
@@ -48,17 +46,17 @@ class Beacon {
         $data
         DATA;
 
-        echo '<pre>';
+  /*      echo '<pre>';
         print_r($data);
-        echo '</pre>';
+        echo '</pre>';*/
 
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
         $res = curl_exec($curl);
 
-        echo "<pre>";
+/*        echo "<pre>";
         print_r($res);
-        echo "</pre>";
+        echo "</pre>";*/
 
         curl_close($curl);
 

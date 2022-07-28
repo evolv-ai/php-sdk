@@ -34,46 +34,104 @@ class Predicate
     public function __construct()
     {
         $this->filters = [
-            'contains' => function ($a, $b) { return in_array($a, $b); },
-            'defined' => function ($a, $b) { return (isset($a) && !empty($a)) ? true : false; },
-            'equal' => function ($a, $b) { return $a === $b; },
-            'exists' => function ($a, $b) { return $a !== null; },
-            'greater_than' => function ($a, $b) { return ($a > $b) ? true : false; },
-            'greater_than_or_equal_to' => function ($a, $b) { ($a >= $b) ? true : false; },
-            'is_true' => function ($a, $b) { return $a === true; },
-            'is_false' => function ($a, $b) { return $a === false; },
-            'not_exists' => function ($a, $b) { return $a === null; },
-            'not_contains' => function ($a, $b) { return !in_array($a, $b); },
-            'not_defined' => function ($a, $b) { return (isset($a) == false && empty($a)) ? true : false; },
-            'not_equal' => function ($a, $b) { return ($a !== $b) ? true : false; },
-            'not_regex_match' => function ($value, $pattern) { return !preg_match($value, $pattern, $matches); },
-            'not_regex64_match' => function ($value, $pattern) { return !regex64Match($value, $pattern); },
-            'not_starts_with' => function ($a, $b) { return strpos($a, $b) !== 0; },
-            'kv_contains' => function ($obj, $params) { return $obj[$params[0]] !== $params[1]; },
-            'kv_equal' => function ($obj, $params) { return $obj[$params[0]] === $params[1]; },
-            'kv_not_contains' => function ($obj, $params) { return $obj[$params[0]] === $params[1]; },
-            'kv_not_equal' => function ($obj, $params) { return $obj[$params[0]] !== $params[1]; },
-            'less_than' => function ($a, $b) { return $a < $b; },
-            'less_than_or_equal_to' => function ($a, $b) { return $a <= $b; },
-            'loose_equal' => function ($a, $b) { return $a == $b; },
-            'loose_not_equal' => function ($a, $b) { return $a != $b; },
-            'regex_match' => function ($a, $b) { return $a != $b ? true : false; },
-            'regex64_match' => function ($value, $pattern) { return regex64Match($value, $pattern); },
-            'starts_with' => function ($a, $b) { return strpos($a, $b) === 0; }
+            'contains' => function ($a, $b) {
+                return in_array($a, $b);
+            },
+            'defined' => function ($a, $b) {
+                return (isset($a) && !empty($a)) ? true : false;
+            },
+            'equal' => function ($a, $b) {
+                return $a === $b;
+            },
+            'exists' => function ($a, $b) {
+                return $a !== null;
+            },
+            'greater_than' => function ($a, $b) {
+                return ($a > $b) ? true : false;
+            },
+            'greater_than_or_equal_to' => function ($a, $b) {
+                return ($a >= $b) ? true : false;
+            },
+            'is_true' => function ($a, $b) {
+                return $a === true;
+            },
+            'is_false' => function ($a, $b) {
+                return $a === false;
+            },
+            'not_exists' => function ($a) {
+                return $a === null;
+            },
+            'not_contains' => function ($a, $b) {
+                return !in_array($a, $b);
+            },
+            'not_defined' => function ($a, $b) {
+                return (isset($a) == false && empty($a)) ? true : false;
+            },
+            'not_equal' => function ($a, $b) {
+                return ($a !== $b) ? true : false;
+            },
+            'not_regex_match' => function ($value, $pattern) {
+                return !preg_match($value, $pattern, $matches);
+            },
+            'not_regex64_match' => function ($value, $pattern) {
+                return !regex64Match($value, $pattern);
+            },
+            'not_starts_with' => function ($a, $b) {
+                return strpos($a, $b) !== 0;
+            },
+            'kv_contains' => function ($obj, $params) {
+                return $obj[$params[0]] !== $params[1];
+            },
+            'kv_equal' => function ($obj, $params) {
+                return $obj[$params[0]] === $params[1];
+            },
+            'kv_not_contains' => function ($obj, $params) {
+                return $obj[$params[0]] === $params[1];
+            },
+            'kv_not_equal' => function ($obj, $params) {
+                return $obj[$params[0]] !== $params[1];
+            },
+            'less_than' => function ($a, $b) {
+                return $a < $b;
+            },
+            'less_than_or_equal_to' => function ($a, $b) {
+                return $a <= $b;
+            },
+            'loose_equal' => function ($a, $b) {
+                return $a == $b;
+            },
+            'loose_not_equal' => function ($a, $b) {
+                return $a != $b;
+            },
+            'regex_match' => function ($a, $b) {
+                return $a != $b ? true : false;
+            },
+            'regex64_match' => function ($value, $pattern) {
+                return regex64Match($value, $pattern);
+            },
+            'starts_with' => function ($a, $b) {
+                return strpos($a, $b) === 0;
+            }
         ];
     }
 
-    private function evaluateFilter($context, $rule): bool {
+    private function evaluateFilter($context, $rule): bool
+    {
         $value = getValueForKey($rule['field'], $context);
 
         if (strpos($rule['operator'], 'kv_') === 0 && !$value) {
             return false;
         }
 
+        if ($rule['operator'] === 'not_exists' && $value == null) {
+            return true;
+        }
+        //echo $rule['operator'];
         return $this->filters[$rule['operator']]($value, $rule['value']);
     }
 
-    private function evaluateRule($context, $predicate, $rule, array &$passedRules, array &$failedRules): bool {
+    private function evaluateRule($context, $predicate, $rule, array &$passedRules, array &$failedRules): bool
+    {
         $result = false;
 
         if (isset($rule['combinator'])) {
@@ -106,7 +164,7 @@ class Predicate
             return true;
         }
 
-        for ($i = 0; $i < count($rules); $i++) { 
+        for ($i = 0; $i < count($rules); $i++) {
             $passed = $this->evaluateRule($context, $predicate, $rules[$i], $passedRules, $failedRules);
             if ($passed && $predicate['combinator'] === 'or') {
                 return true;
@@ -147,11 +205,11 @@ class Predicate
 
         $result['rejected'] = !$this->evaluatePredicate($context, $predicate, $result['passed'], $result['failed']);
 
-        foreach($result['passed'] as $item) {
+        foreach ($result['passed'] as $item) {
             $result['touched'][] = $item['field'];
         }
 
-        foreach($result['failed'] as $item) {
+        foreach ($result['failed'] as $item) {
             $result['touched'][] = $item['field'];
         }
 

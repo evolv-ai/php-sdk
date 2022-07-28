@@ -46,11 +46,12 @@ class EvolvContext
     public function resolve()
     {
         $this->ensureInitialized();
+       // print_r($this->remoteContext);
 
         return array_merge_recursive($this->remoteContext, $this->localContext);
     }
 
-    public function initialize($uid, $remoteContext = [], $localContext = [])
+    public function initialize($uid, $httpClients = null, $remoteContext = [], $localContext = [])
     {
         if ($this->initialized) {
             throw new \Exception('Evolv: The context is already initialized');
@@ -66,7 +67,7 @@ class EvolvContext
 
         $this->initialized = true;
 
-        emit(CONTEXT_INITIALIZED, $this->resolve());
+     //   emit(CONTEXT_INITIALIZED, $this->resolve());
     }
 
     public function __destruct()

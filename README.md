@@ -2,7 +2,10 @@
 
 <h2>Install Php-Sdk through composer:</h2>
 
-<code>https://packagist.org/packages/sdk-php/evolv-sdk</code>
+
+```php
+  composer require evolv/php-sdk
+```
 
 <h2>Install</h2>
 
@@ -15,18 +18,20 @@
   composer start
 ```
 
-<h2>Documentation Build</h2>
+<h2>Generate Documentation</h2>
 
 ```php
   composer docs
 ```
 
-<h2>Tests Build</h2>
+<h2>Run Tests</h2>
 
 ```php
   composer test
 ```
 
+
+<h2>Package Usage</h2>
 
 ```php
   <?php
@@ -46,7 +51,7 @@
   $client->initialize($uid);
 ```
 
-<h2>About Evolv and the Ascend Product</h2>
+<h2>About Evolv Product</h2>
 
 Evolv Delivers Autonomous Optimization Across Web & Mobile.
 

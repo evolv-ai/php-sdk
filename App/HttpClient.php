@@ -7,6 +7,7 @@ namespace Evolv;
 class HttpClient {
     public function request(string $url)
     {
+
         $opts = array(
             'https' => array(
                 'method' => "GET",
@@ -19,7 +20,6 @@ class HttpClient {
         $response = file_get_contents($url, false, $opts);
 
         if (!$response) {
-
             exit("Request failed");
         }
 

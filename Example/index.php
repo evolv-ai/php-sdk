@@ -15,7 +15,7 @@ function display($arr, $title = null)
     }
 
     echo "<pre>";
-    print_r($arr);
+    //   print_r($arr);
     echo "</pre>";
 }
 
@@ -118,7 +118,7 @@ function display($arr, $title = null)
                 // Provide your credentials for the Evolv API
                 // and any other desired options, such as initial context, autoconfirm etc.
                 $environment = '7f4099bfbc';
-                $uid = 'user_id';
+                $uid = 'user';
                 $endpoint = 'https://participants-stg.evolv.ai/';
 
 
@@ -131,62 +131,17 @@ function display($arr, $title = null)
                 // MARK: - EvolvClient is initialized.
                 $client->initialize($uid);
 
-
-                // Subscribe to "cart.items_limit" key value.
-                // If key is not active, i.e. received value is nil,
-                // replace it with default value ("Some text" in this case).
-                $client->get("cart.items_limit", function ($value) {
-                    $result = empty($value) ? "34" : $value;
-                    display($result);
-
-                });
-
-
-                // Subscribe to "home.cta_text" key value.
-                // If key is not active, i.e. received value is nil,
-                // replace it with default value ("Some text" in this case).
-                $client->get("home.cta_text", function ($value) {
-                    $title = empty($value) ? "Custom title button" : $value;
-                    display($title);
-                });
-
-
-                // MARK: - Switches for context values.
-                if ($button_onclick) {
-                    // Set local or remote context value "home" for key "native.pageCategory".
-                    $client->context->set('native.pageCategory', 'home', false);
-
-                } else {
-                    // MARK: - Confirm into experiment.
-                    $client->on('contaminated', function () use ($client) {
-                        display('CONTAMINATED');
-                    });
+                switch ($client->initialized) {
+                    case true:
+                        $msg = "Evolv client initialization is finished successfully.";
+                        break;
+                    case false:
+                        $msg = "Evolv client initialization is finished with error";
+                        break;
                 }
-
-
-                if ($button_onclick) {
-                    // Set local or remote context value "pdp" for key "native.pageCategory".
-                    $client->context->set('native.pageCategory', 'pdp', false);
-                } else {
-                    $client->context->remove('native.pageCategory');
-                }
-
-
-                // MARK: - Scroll to tap
-                if ($button_onclick) {
-                    $client->emit("click", "tab#2", false);
-                }
-
-
-                $client->on('confirmed', function () use ($client) {
-                    display('CONFIRMED');
-                    $client->contaminate(['reason' => 'no special reason']);
-                });
-
+                echo $msg;
 
                 $client->context->set('native.newUser', true);
-                $client->context->set('native.pageCategory', 'home');
-
                 ?>
             </div>
         </div>
@@ -195,11 +150,40 @@ function display($arr, $title = null)
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-3">Hello, world!</h1>
-            <p>This is a template for a simple marketing or informational website. It includes a large callout called a
-                jumbotron and three supporting pieces of content. Use it as a starting point to create something more
-                unique.</p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+
+            <?php
+            // Subscribe to "pdp.page_layout" key value.
+            // If key is not active, i.e. received value is nil,
+            // replace it with default value ("Some text" in this case).
+            $client->get("pdp.page_layout", function ($value) {
+                switch ($value) {
+                    case 'Layout 1':
+                        require_once __DIR__ . '/tpl-layout1.php';
+                        break;
+                    case 'Layout 2':
+                        require_once __DIR__ . '/tpl-layout2.php';
+                        break;
+                    default:
+                        require_once __DIR__ . '/tpl-default.php';
+                        break;
+                }
+            });
+
+
+
+            // Subscribe to "home.cta_text" key value.
+            // If key is not active, i.e. received value is nil,
+            // replace it with default value ("Some text" in this case).
+            $client->get("home.cta_text", function ($value) {
+                $btnTitle = empty($value) ? "Learn More" : $value;
+                echo '<p><a class="btn btn-primary btn-lg" href="#" role="button">' . $btnTitle . '</a></p>';
+            });
+
+            $client->context->set('native.pageCategory',false);
+
+
+            ?>
+
         </div>
     </div>
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Evolv;
 
-
 use function Evolv\Utils\waitFor;
 use function Evolv\Utils\emit;
+use Evolv\HttpClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -30,7 +30,7 @@ class EvolvClient
      * @param bool $autoconfirm
      * @return object
      */
-    public function __construct(string $environment, string $endpoint = 'https://participants.evolv.ai/', bool $autoconfirm = true, $llist = false)
+    public function __construct(string $environment, string $endpoint = 'https://participants.evolv.ai/',  bool $autoconfirm = true, $llist = false)
     {
         $this->context = new EvolvContext();
         $this->store = new EvolvStore($environment, $endpoint);
@@ -40,9 +40,6 @@ class EvolvClient
         
         $this->autoconfirm = $autoconfirm;
 
-        if($llist){
-           echo "werwer";
-        }
     }
 
     /**
@@ -54,8 +51,9 @@ class EvolvClient
      * @return array
      */
 
-    public function initialize(string $uid, array $remoteContext = [], array $localContext = [])
+    public function initialize(string $uid, $httpClients = null, array $remoteContext = [], array $localContext = [])
     {
+
         if ($this->initialized) {
             throw new \Exception('Evolv: Client is already initialized');
             exit('Evolv: Client is already initialized');
@@ -66,8 +64,8 @@ class EvolvClient
             exit('Evolv: "uid" must be specified');
         }
 
-        $this->context->initialize($uid, $remoteContext, $localContext);
-        $this->store->initialize($this->context);
+        $this->context->initialize($uid, $httpClients, $remoteContext, $localContext);
+        $this->store->initialize($this->context, $httpClients);
 
         if ($this->autoconfirm) {
             $this->confirm();
