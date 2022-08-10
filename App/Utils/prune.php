@@ -45,7 +45,8 @@ function reattribute( array $obj, array $active, $collected = null) {
     if (!is_array($obj) || empty($obj)) {
         return $obj;
     }
-    if ($obj['_predicated_values']) {
+
+    if (isset($obj['_predicated_values'])) {
 
          $predicatedKeyPrefix = implode(".", $collected);
 
@@ -54,18 +55,22 @@ function reattribute( array $obj, array $active, $collected = null) {
             if ($predicatedKeyPrefix . '.' . $obj['_predicated_values'][$i]['_predicate_assignment_id'] && in_array( $predicatedKeyPrefix,$active)) {
                 return $obj['_predicated_values'][$i]['_value'];
             }
+
         }
 
         return null;
     }
+
     $keys = array_keys($obj);
 
     for ( $i = 0; $i < count($keys); $i++) {
         $key = $keys[$i];
         $newCollected = array_merge($collected,[$key]);
+
         if(is_array($obj[$key])) {
             $obj[$key] = reattribute($obj[$key], $active, $newCollected);
         }
+
     }
 
     return $obj;
