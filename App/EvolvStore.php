@@ -181,9 +181,74 @@ class EvolvStore
         return $expKeyStates;
     }
 
-    private function evaluateAllocationPredicates()
+    public  function copySet($from, $into) {
+        $copy = $into || [];
+        foreach ($from as $item){
+            $copy[] = $item;
+        }
+        return $copy;
+    }
+
+    private function evaluateAllocationPredicates(object $context, array $allocation, $activeKeyStates)
     {
-        // TODO: not implemented yet
+        $genome = $allocation['genome'];
+
+        if(empty($genome)){
+            return;
+        }
+
+        $evaluableContext = $this->context->resolve();
+
+        foreach ($activeKeyStates as $key){
+            $keyParts = explode(".", $key);
+            $predicatedVariant = $genome;
+            for ($i = 0; $i < count($keyParts); $i++) {
+                $predicatedVariant = !empty($predicatedVariant[$keyParts[$i]]) ? $predicatedVariant[$keyParts[$i]] : [];
+            }
+
+            $predicatedValues = isset($predicatedVariant['_predicated_values']) ? $predicatedVariant['_predicated_values'] : [];
+
+            $touchedKeys = [];
+
+            if (!empty($predicatedValues)) {
+                $predicatedId = '';
+                for ($i = 0; $i < count($predicatedValues); $i++) {
+                    $variant = $predicatedValues[$i];
+                    $predicate = $variant['_predicate']
+                        ? $variant['_predicate']
+                        : [
+                            'combinator'=> 'and',
+                            'rules' => array_map(function($field) {
+                                return [
+                                    'field'=> $field,
+                                    'operator'=> 'defined'];
+                            }, $touchedKeys)
+                        ];
+
+                    $result = $this->predicate->evaluate($evaluableContext, $predicate);
+
+                    $this->copySet($result['touched'], $touchedKeys);
+
+                    if (!$result['rejected']) {
+                        $predicatedId = $variant['_predicate_assignment_id'];
+                        break;
+                    }
+                }
+                if (!$predicatedId) {
+                    return;
+                }
+
+                $predicatedKey = $key . '.' . $predicatedId;
+
+                $activeKeyStates[] = $predicatedKey;
+              /*  echo "<pre>";
+                print_r( $activeKeyStates);
+                echo "</pre>";*/
+
+            }
+
+        }
+
     }
 
     private function setActiveAndEntryKeyStates()
@@ -213,10 +278,12 @@ class EvolvStore
                 $activeKeyStates[] = $key;
             }
 
-            // $allocation = array_filter($this->allocations, function($a) use ($eid) { return $a['eid'] === $eid; })[0];
-            // if (isset($allocation)) {
-            //     $this->evaluateAllocationPredicates();
-            // }
+             $allocation = array_filter($this->allocations, function($a) use ($eid) { return $a['eid'] === $eid; })[0];
+
+             if (isset($allocation)) {
+
+                 $this->evaluateAllocationPredicates($this->context, $allocation, $activeKeyStates);
+             }
 
             $entryKeyStates = [];
 
