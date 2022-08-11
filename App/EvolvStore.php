@@ -241,10 +241,6 @@ class EvolvStore
                 $predicatedKey = $key . '.' . $predicatedId;
 
                 $activeKeyStates[] = $predicatedKey;
-              /*  echo "<pre>";
-                print_r( $activeKeyStates);
-                echo "</pre>";*/
-
             }
 
         }
@@ -278,7 +274,13 @@ class EvolvStore
                 $activeKeyStates[] = $key;
             }
 
-             $allocation = array_filter($this->allocations, function($a) use ($eid) { return $a['eid'] === $eid; })[0];
+             $allocation = array_filter($this->allocations, function($a) use ($eid) {
+                 if($a['eid'] === $eid) {
+                     return $a['eid'] === $eid;
+                 }
+                 return $eid;
+
+             })[0];
 
              if (isset($allocation)) {
 
