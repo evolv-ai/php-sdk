@@ -51,3 +51,9 @@ evolv/php-sdk
 Evolv Delivers Autonomous Optimization Across Web & Mobile.
 
 You can find out more by visiting: <a href="https://www.evolv.ai/">https://www.evolv.ai/</a>
+
+## Local Development
+
+```shell
+docker-compose up -d
+```

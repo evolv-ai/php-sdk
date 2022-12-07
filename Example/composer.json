@@ -1,0 +1,21 @@
+{
+    "name": "evolv/php-sdk-demo",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Evolv\\PhpSdkDemo\\": "src/"
+        }
+    },
+	"repositories": [
+		{
+			"type": "path",
+			"url": "..",
+			"options": {
+				"symlink": true
+			}
+		}
+	],
+    "require": {
+		"evolv/php-sdk": "@dev"
+	}
+}

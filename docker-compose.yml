@@ -3,9 +3,15 @@ version: '3.8'
 services:
   php-apache-environment:
     container_name: php-sdk
-    image: php:7.4-apache
+    build:
+      dockerfile: Example/Dockerfile
+      context: .
     volumes:
-      - ./:/var/www/html/
-      - ./php.ini:/usr/local/etc/php/php.ini
+      - .:/var/www/html/
+#      - /var/www/html/Example/vendor
+      - ./docker/apache/sites-enabled:/etc/apache2/sites-enabled
+#      - ./php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
     ports:
       - 8000:80
