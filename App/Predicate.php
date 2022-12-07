@@ -35,7 +35,7 @@ class Predicate
     {
         $this->filters = [
             'contains' => function ($a, $b) { return strpos($a, $b) !== false; },
-            'defined' => function ($a, $b) { return (isset($a) && !empty($a)) ? true : false; },
+            'defined' => function ($a, $b) { return isset($a); },
             'equal' => function ($a, $b) { return $a === $b; },
             'exists' => function ($a, $b) { return isset($a); },
             'greater_than' => function ($a, $b) { return ($a > $b) ? true : false; },
@@ -44,7 +44,7 @@ class Predicate
             'is_false' => function ($a, $b) { return $a === false; },
             'not_exists' => function ($a, $b) { return !isset($a); },
             'not_contains' => function ($a, $b) { return strpos($a, $b) === false; },
-            'not_defined' => function ($a, $b) { return (isset($a) && empty($a)) ? true : false; },
+            'not_defined' => function ($a, $b) { return !isset($a); },
             'not_equal' => function ($a, $b) { return ($a !== $b) ? true : false; },
             'not_regex_match' => function ($value, $pattern) { return !regexMatch($value, $pattern); },
             'not_regex64_match' => function ($value, $pattern) { return !regex64Match($value, $pattern); },
