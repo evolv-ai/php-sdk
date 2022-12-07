@@ -2,9 +2,10 @@
 
 declare (strict_types=1);
 
-use  Evolv\EvolvClient;
-
+# Must be invoked once at top-level for Composer
 require_once __DIR__ . '/../vendor/autoload.php';
+
+use Evolv\EvolvClient;
 
 function display($arr, $title = null)
 {
