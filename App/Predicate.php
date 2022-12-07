@@ -5,27 +5,17 @@ declare(strict_types=1);
 namespace Evolv;
 
 use function Evolv\Utils\getValueForKey;
+use function Evolv\Utils\regexFromString;
 
 require_once __DIR__ . '/../App/Utils/getValueForKey.php';
+require_once __DIR__ . '/../App/Utils/regexFromString.php';
 
-function regexFromString($string)
-{
-    if (strpos($string, '/') !== 0) {
-        return '@' . $string . '@';
-    }
-    
-    return preg_replace('/^\/|\/([^\/]*)$/', '@$1', $string);
-}
 
 function regex64Match($value, $b64pattern): bool
 {
-    try {
-        $pattern = base64_decode($b64pattern);
+    $pattern = base64_decode($b64pattern);
 
-        return isset($value) && preg_match(regexFromString($pattern), $value, $matches);
-    } catch (\Throwable $th) {
-        return false;
-    }
+    return regexMatch($value, $pattern);
 }
 
 function regexMatch($value, $pattern): bool
