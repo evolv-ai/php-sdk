@@ -2,7 +2,18 @@
 
 namespace Evolv\Utils;
 
-require_once __DIR__ . '/polyfill.php';
+if (!function_exists('array_is_list')) {
+    function array_is_list(array $array): bool
+    {
+        $i = 0;
+        foreach ($array as $k => $v) {
+            if ($k !== $i++) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 
 function flatten_recursive(array $current, string $parentKey) {
     $items = [];
