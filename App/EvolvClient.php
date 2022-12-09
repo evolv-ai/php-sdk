@@ -51,7 +51,6 @@ class EvolvClient
 
     public function initialize(string $uid, array $remoteContext = [], array $localContext = [], $httpClient = null)
     {
-
         if ($this->initialized) {
             throw new \Exception('Evolv: Client is already initialized');
             exit('Evolv: Client is already initialized');
@@ -61,15 +60,6 @@ class EvolvClient
             throw new \Exception('Evolv: "uid" must be specified');
             exit('Evolv: "uid" must be specified');
         }
-
-        $this->context->initialize($uid, $remoteContext, $localContext);
-        $this->store->initialize($this->context, $httpClient);
-
-        if ($this->autoconfirm) {
-            $this->confirm();
-        }
-
-        $this->initialized = true;
 
         waitFor(CONTEXT_INITIALIZED, function($type, $ctx) {
             $this->contextBeacon->emit($type, $this->context->remoteContext);
@@ -81,12 +71,27 @@ class EvolvClient
             }
             $this->contextBeacon->emit($type, ['key' => $key, 'value' => $value]);
         });
-        waitFor(CONTEXT_VALUE_CHANGED, function($type, $key, $value, $local) {
+        waitFor(CONTEXT_VALUE_CHANGED, function($type, $key, $value, $before, $local) {
             if ($local) {
                 return;
             }
             $this->contextBeacon->emit($type, ['key' => $key, 'value' => $value]);
         });
+        waitFor(CONTEXT_VALUE_REMOVED, function ($type, $key, $local) {
+            if ($local) {
+                return;
+            }
+            $this->contextBeacon->emit($type, ['key' => $key]);
+        });
+
+        $this->context->initialize($uid, $remoteContext, $localContext);
+        $this->store->initialize($this->context, $httpClient);
+
+        if ($this->autoconfirm) {
+            $this->confirm();
+        }
+
+        $this->initialized = true;
 
         emit(EvolvClient::INITIALIZED);
     }
