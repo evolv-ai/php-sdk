@@ -103,7 +103,7 @@ class EvolvContext
      * @param bool $local If true, the value will only be added to the localContext.
      * @return bool True if context value has been changes, otherwise false.
      */ 
-    public function set(string $key, $value, bool $local = false): void
+    public function set(string $key, $value, bool $local = false): bool
     {
         $this->ensureInitialized();
 
@@ -114,18 +114,25 @@ class EvolvContext
             $before = getValueForKey($key, $this->remoteContext);
         }
 
+        if ($before === $value) {
+            return false;
+        }
+
         if ($local) {
             setKeyToValue($key, $value, $this->localContext);
         } else {
             setKeyToValue($key, $value, $this->remoteContext);
         }
 
+        $updated = $this->resolve();
         if (is_null($before)) {
-            emit(CONTEXT_VALUE_ADDED, $key, $value, $local);
+            emit(CONTEXT_VALUE_ADDED, $key, $value, $local, $updated);
         } else {
-            emit(CONTEXT_VALUE_CHANGED, $key, $value, $before, $local);
+            emit(CONTEXT_VALUE_CHANGED, $key, $value, $before, $local, $updated);
         }
-        emit(CONTEXT_CHANGED, $this->resolve());
+        emit(CONTEXT_CHANGED, $updated);
+
+        return true;
     }
 
     /**
@@ -229,7 +236,7 @@ class EvolvContext
      * @param int $limit Max length of array to maintain.
      * @return bool True if value was successfully added.
      */
-    public function pushToArray(string $key, $value, $local = false, $limit = null)
+    public function pushToArray(string $key, $value, $local = false, $limit = null): bool
     {
         $limit = $limit ?? DEFAULT_QUEUE_LIMIT;
 

@@ -25,7 +25,8 @@ class EvolvClient
      * The context against which the key predicates will be evaluated.
      */
     public EvolvContext $context;
-    private $store;
+    public HttpClient $httpClient;
+    private EvolvStore $store;
     private bool $autoconfirm;
     private Beacon $contextBeacon;
     private Beacon $eventBeacon;
@@ -36,16 +37,17 @@ class EvolvClient
      * @param bool $autoconfirm Optional. True by default. The autoconfirm flag.
      * @return object
      */
-    public function __construct(string $environment, string $endpoint = 'https://participants.evolv.ai/', bool $autoconfirm = true)
+    public function __construct(string $environment, string $endpoint = 'https://participants.evolv.ai/', bool $autoconfirm = true, $httpClient = null)
     {
+        $this->httpClient = $httpClient ?? new HttpClient();
+
         $this->context = new EvolvContext();
-        $this->store = new EvolvStore($environment, $endpoint);
+        $this->store = new EvolvStore($environment, $endpoint, $this->httpClient);
         
-        $this->contextBeacon = new Beacon($endpoint . 'v1/' . $environment . '/data', $this->context);
-        $this->eventBeacon = new Beacon($endpoint . 'v1/' . $environment . '/events', $this->context);
+        $this->contextBeacon = new Beacon($endpoint . 'v1/' . $environment . '/data', $this->context, $this->httpClient);
+        $this->eventBeacon = new Beacon($endpoint . 'v1/' . $environment . '/events', $this->context, $this->httpClient);
         
         $this->autoconfirm = $autoconfirm;
-
     }
 
     /**
@@ -55,7 +57,7 @@ class EvolvClient
      * @param array $remoteContext A map of data used for evaluating context predicates and analytics.
      * @param array $localContext A map of data used only for evaluating context predicates.
      */
-    public function initialize(string $uid, array $remoteContext = [], array $localContext = [], $httpClient = null)
+    public function initialize(string $uid, array $remoteContext = [], array $localContext = [])
     {
         if ($this->initialized) {
             throw new \Exception('Evolv: Client is already initialized');
@@ -91,7 +93,7 @@ class EvolvClient
         });
 
         $this->context->initialize($uid, $remoteContext, $localContext);
-        $this->store->initialize($this->context, $httpClient);
+        $this->store->initialize($this->context);
 
         if ($this->autoconfirm) {
             $this->confirm();

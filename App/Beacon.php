@@ -13,39 +13,24 @@ const ENDPOINT_PATTERN = "/\/(v\d+)\/\w+\/([a-z]+)$/i";
 class Beacon {
     private string $endpoint;
     private EvolvContext $context;
+    private HttpClient $httpClient;
     private array $messages = [];
     private bool $v1Events;
 
-    public function __construct(string $endpoint, EvolvContext $context)
+    public function __construct(string $endpoint, EvolvContext $context, HttpClient $httpClient)
     {
         $this->endpoint = $endpoint;
         $this->context = $context;
+        $this->httpClient = $httpClient;
 
         preg_match(ENDPOINT_PATTERN, $endpoint, $matches);
         $this->v1Events = $matches && $matches[1] === 'v1' && $matches[2] === 'events';
     }
 
     private function send($payload) {
-
         $data = json_encode($payload);
-
-        $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_URL, $this->endpoint);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        $headers = array(
-            "Accept: application/json",
-            "Content-Type: application/json",
-        );
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-        curl_exec($curl);
-
-        curl_close($curl);
+        
+        $this->httpClient->post($this->endpoint, $data);
 
         $this->messages = [];
     }

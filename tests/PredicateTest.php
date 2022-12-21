@@ -20,20 +20,17 @@ class PredicateTest extends TestCase
     {
         // Arrange
         $predicate = [
-            'id' => 123,
             'combinator' => 'and',
             'rules' => [
                 0 => [
                     'field' => 'web.referrer',
                     'operator' => 'exists',
-                    'value' => null,
-                    'index' => 0
+                    'value' => null
                 ],
                 1 => [
                     'field' => 'platform',
                     'operator' => 'equal',
-                    'value' => 'ios',
-                    'index' => 1
+                    'value' => 'ios'
                 ]
             ]
         ];
@@ -63,13 +60,10 @@ class PredicateTest extends TestCase
                 0 => [
                     'operator' => 'equal',
                     'field' => 'device',
-                    'id' => 'r-ce38958d-1f13-4761-8e07-f87979db3903',
-                    'value' => 'mobile',
-                    'index' => 1
+                    'value' => 'mobile'
                 ]
             ],
-            'combinator' => 'and',
-            'id' => 382
+            'combinator' => 'and'
         ];
         $context = [
             'web' => [
@@ -90,7 +84,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldSelectAUserIntoAnExperimentWithAQueryStringFilterCorrectly()
+    public function shouldSelectAUserIntoAnExperimentWithAQueryStringFilterCorrectly()
     {
         // Arrange
         $predicate = [
@@ -98,13 +92,10 @@ class PredicateTest extends TestCase
                 0 => [
                     'operator' => 'equal',
                     'field' => 'web.query_parameters.testing',
-                    'id' => 'r-6b2f1647-4ced-4365-b378-0e109b040897',
-                    'value' => 'test1',
-                    'index' => 0,
+                    'value' => 'test1'
                 ],
             ],
-            'combinator' => 'and',
-            'id' => 'g-4f151a9c-2710-4b61-9b77-040c00b7cdf2',
+            'combinator' => 'and'
         ];
         $context = [
             'web' => [
@@ -129,7 +120,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldExcludeAUserThatDoesntMeetTheQueryStringFilter()
+    public function shouldExcludeAUserThatDoesntMeetTheQueryStringFilter()
     {
         // Arrange
         $predicate = [
@@ -137,13 +128,10 @@ class PredicateTest extends TestCase
                 0 => [
                     'operator' => 'equal',
                     'field' => 'web.query_parameters.testing',
-                    'id' => 'r-6b2f1647-4ced-4365-b378-0e109b040897',
-                    'value' => 'test1',
-                    'index' => 0,
+                    'value' => 'test1'
                 ],
             ],
-            'combinator' => 'and',
-            'id' => 'g-4f151a9c-2710-4b61-9b77-040c00b7cdf2',
+            'combinator' => 'and'
         ];
         $context = [
             'web' => [
@@ -168,7 +156,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldFailIfAllClausesOfAnOrFail()
+    public function shouldFailIfAllClausesOfAnOrFail()
     {
         // Arrange
         $predicate = [
@@ -178,14 +166,12 @@ class PredicateTest extends TestCase
                 0 => [
                     'field' => 'device',
                     'operator' => 'equal',
-                    'value' => 'phone',
-                    'index' => 0,
+                    'value' => 'phone'
                 ],
                 1 => [
                     'field' => 'device',
                     'operator' => 'equal',
-                    'value' => 'desktop',
-                    'index' => 1,
+                    'value' => 'desktop'
                 ],
             ],
         ];
@@ -209,7 +195,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldFailIfAnyClausesOfAnAndFail()
+    public function shouldFailIfAnyClausesOfAnAndFail()
     {
         // Arrange
         $predicate = [
@@ -250,7 +236,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldEvaluateARegexPredicateCorrectlyl()
+    public function shouldEvaluateARegexPredicateCorrectly()
     {
         // Arrange
         $predicate = [
@@ -280,7 +266,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldEvaluateARealPredicateCorrectly()
+    public function shouldEvaluateARealPredicateCorrectly()
     {
         // Arrange
         $predicate = [
@@ -341,7 +327,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldNotFilterEnergidirectUserWithNotContains()
+    public function shouldNotFilterEnergidirectUserWithNotContains()
     {
         // Arrange
         $predicate = [
@@ -351,9 +337,7 @@ class PredicateTest extends TestCase
                     'operator' => 'not_contains',
                     'id' => 'r-f2dc0b86-665f-41d7-a142-7dd0658fa9bd',
                     'field' => 'web.query_parameters.ecmp',
-                    'value' => [
-                        0 => 'aff:dav',
-                    ],
+                    'value' => 'aff:dav',
                     'index' => 1,
                 ],
             ],
@@ -404,7 +388,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldFilterEnergidirectUserWithNotContains()
+    public function shouldFilterEnergidirectUserWithNotContains()
     {
         // Arrange
         $predicate = [
@@ -414,7 +398,7 @@ class PredicateTest extends TestCase
                     'operator' => 'not_contains',
                     'id' => 'r-f2dc0b86-665f-41d7-a142-7dd0658fa9bd',
                     'field' => 'web.query_parameters.ecmp',
-                    'value' => ['aff'=>'dav'],
+                    'value' => 'aff:dav',
                     'index' => 1,
                 ],
             ],
@@ -455,15 +439,14 @@ class PredicateTest extends TestCase
         $result = $this->predicate->evaluate($context, $predicate);
 
         // Assert
-        $this->assertCount(1, $result['passed']);
-        $this->assertCount(0, $result['failed']);
+        $this->assertCount(0, $result['passed']);
+        $this->assertCount(1, $result['failed']);
     }
-
 
     /**
      * @test
      */
-    public function ShouldEvaluateAFlatPredicateCorrectly()
+    public function shouldEvaluateAFlatPredicateCorrectly()
     {
         // Arrange
         $predicate = [
@@ -502,7 +485,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldEvaluateGreaterThanAndLessThanProperties()
+    public function shouldEvaluateGreaterThanAndLessThanProperties()
     {
         // Arrange
         $predicate = [
@@ -540,7 +523,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldEvaluateTypelessEqualProperty()
+    public function shouldEvaluateTypelessEqualProperty()
     {
         // Arrange
         $predicate = [
@@ -572,7 +555,7 @@ class PredicateTest extends TestCase
     /**
      * @test
      */
-    public function ShouldEvaluateTypelessNotEqualProperty()
+    public function shouldEvaluateTypelessNotEqualProperty()
     {
         // Arrange
         $predicate = [
@@ -600,5 +583,4 @@ class PredicateTest extends TestCase
         $this->assertCount(1, $result['passed']);
         $this->assertCount(0, $result['failed']);
     }
-
 }
