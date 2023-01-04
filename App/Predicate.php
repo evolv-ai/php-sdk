@@ -71,7 +71,7 @@ class Predicate
             return false;
         }
 
-        return $this->filters[$rule['operator']]($value, $rule['value']);
+        return $this->filters[$rule['operator']]($value, $rule['value'] ?? null);
     }
 
     private function evaluateRule($context, $predicate, $rule, array &$passedRules, array &$failedRules): bool
@@ -126,8 +126,8 @@ class Predicate
      * @typedef EvaluationResult
      * @property array passed
      * @property array failed
-     * @property array rejected
      * @property array touched
+     * @property bool rejected
      */
 
     /**
@@ -144,7 +144,7 @@ class Predicate
             'passed' => [],
             'failed' => [],
             'touched' => [],
-            'rejected' => []
+            'rejected' => true
         ];
 
         $result['rejected'] = !$this->evaluatePredicate($context, $predicate, $result['passed'], $result['failed']);

@@ -96,10 +96,11 @@ class EvolvStore
 
     private array $subscriptions = [];
 
-    public function __construct(string $environment, string $endpoint)
+    public function __construct(string $environment, string $endpoint, HttpClient $httpClient)
     {
         $this->environment = $environment;
         $this->endpoint = $endpoint;
+        $this->httpClient = $httpClient;
 
         $this->predicate = new Predicate();
     }
@@ -181,9 +182,67 @@ class EvolvStore
         return $expKeyStates;
     }
 
-    private function evaluateAllocationPredicates()
+    private function evaluateAllocationPredicates(array $allocation, array &$activeKeyStates)
     {
-        // TODO: not implemented yet
+        $genome = $allocation['genome'] ?? [];
+        if(empty($genome)){
+            return;
+        }
+
+        $evaluableContext = $this->context->resolve();
+
+        foreach ($activeKeyStates as $key) {
+            $keyParts = explode('.', $key);
+            $predicatedVariant = $genome;
+
+            for($i = 0; $i < count($keyParts); $i++) {
+                $predicatedVariant = $predicatedVariant[$keyParts[$i]] ?? [];
+            }
+
+            $predicatedValues = $predicatedVariant['_predicated_values'] ?? [];
+            $touchedKeys = [];
+
+            if (!empty($predicatedValues)) {
+                $predicatedId = null;
+
+                for ($i = 0; $i < count($predicatedValues); $i++) {
+                    $variant = $predicatedValues[$i];
+
+                    /* In the event that the predicate is null (i.e. a default value), a virtual
+                    * predicate is constructed which yields true only when all of the keys touched
+                    * by previous predicates are been defined on the context. */
+                    $predicate = isset($variant['_predicate'])
+                        ? $variant['_predicate']
+                        : [
+                            'combinator' => 'and',
+                            'rules' => array_map(function($field) {
+                                return [
+                                    'field'=> $field,
+                                    'operator'=> 'defined'
+                                ];
+                            }, $touchedKeys)
+                        ];
+                    
+                    $result = $this->predicate->evaluate($evaluableContext, $predicate);
+
+                    foreach ($result['touched'] as $touchedKey) {
+                        $touchedKeys[] = $touchedKey;
+                    }
+
+                    if (!$result['rejected']) {
+                        $predicatedId = $variant['_predicate_assignment_id'] ?? null;
+                        break;
+                    }
+                }
+
+                if (!$predicatedId) {
+                    return;
+                }
+
+                $predicatedKey = $key . '.' . $predicatedId;
+                $activeKeyStates[] = $predicatedKey;
+            }
+        }
     }
 
     private function setActiveAndEntryKeyStates()
@@ -213,10 +272,10 @@ class EvolvStore
                 $activeKeyStates[] = $key;
             }
 
-            // $allocation = array_filter($this->allocations, function($a) use ($eid) { return $a['eid'] === $eid; })[0];
-            // if (isset($allocation)) {
-            //     $this->evaluateAllocationPredicates();
-            // }
+            $allocation = current(array_filter($this->allocations ?? [], function($a) use ($eid) { return $a['eid'] === $eid; }));
+            if (!empty($allocation)) {
+                $this->evaluateAllocationPredicates($allocation, $activeKeyStates);
+            }
 
             $entryKeyStates = [];
 
@@ -298,13 +357,11 @@ class EvolvStore
         $this->reevaluatingContext = false;
     }
 
-    public function initialize(EvolvContext $context, $httpClient = null)
+    public function initialize(EvolvContext $context)
     {
         if ($this->initialized) {
             throw new \Exception('Evolv: The store has already been initialized.');
         }
-
-        $this->httpClient = isset($httpClient) ? $httpClient : new HttpClient();
 
         $this->context = $context;
         $this->initialized = true;
@@ -414,10 +471,10 @@ class EvolvStore
         $allocationUrl = $this->endpoint . 'v1/' . $this->environment . '/' . $this->context->uid . '/allocations';
         $configUrl = $this->endpoint . 'v1/' . $this->environment . '/' . $this->context->uid . '/configuration.json';
 
-        $arr_location = $this->httpClient->request($allocationUrl);
+        $arr_location = $this->httpClient->get($allocationUrl);
+        $arr_config = $this->httpClient->get($configUrl);
 
-        $arr_config = $this->httpClient->request($configUrl);
-
+        
         $arr_config = json_decode($arr_config, true);
         $arr_location = json_decode($arr_location, true);
 
@@ -468,6 +525,7 @@ class EvolvStore
             $this->subscriptions[] = function ($effectiveGenome, $config) use ($listener, $functionName, $key) {
                 $listener(call_user_func_array([$this, $functionName], [$key, $effectiveGenome, $config]));
             };
+            $listener(call_user_func_array([$this, $functionName], [$key, $this->effectiveGenome, $this->config]));
         } else {
             return call_user_func_array([$this, $functionName], [$key, $this->effectiveGenome, $this->config]);
         }
