@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Evolv;
 
 class HttpClient {
+    private const USER_AGENT = 'Evolv-PHP-SDK/1.0';
+
     public function get(string $url): string
     {
         $opts = array(
             'https' => array(
                 'method' => "GET",
-                'header' => "Content-type: application/json \r\n"
+                'header' => "Content-type: application/json \r\n" .
+                           "User-Agent: " . self::USER_AGENT . " \r\n"
             )
         );
 
@@ -37,6 +40,7 @@ class HttpClient {
         $headers = array(
             "Accept: application/json",
             "Content-Type: application/json",
+            "User-Agent: " . self::USER_AGENT,
         );
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);

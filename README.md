@@ -33,6 +33,11 @@ evolv/php-sdk
 ```php
   composer start
 ```
+The example application will then be accessible on http://localhost:8000/Example/index.php
+http://localhost:8000/Example/pdp.php
+
+index.php has an example of controlling the text value of a button.
+pdp.php has an example of selecting a different code path based on the variant's value.
 
 - generate documentation
 
